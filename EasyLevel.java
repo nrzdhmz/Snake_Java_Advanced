@@ -3,7 +3,7 @@ import java.io.*;
 public class EasyLevel extends SnakeGame {
 
   EasyLevel(int boardWidth, int boardHeight) {
-        super(boardWidth, boardHeight); // Call the constructor of the parent class
+    super(boardWidth, boardHeight); // Call the constructor of the parent class
 
         // Load best score
         loadBestScore();

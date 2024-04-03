@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class App extends JFrame implements ActionListener {
-    JButton level1Button, level2Button, level3Button; // Added level3Button
+    JButton level1Button, level2Button, level3Button, level4Button; // Added level3Button
 
     public App() {
         setTitle("Snake Game");
@@ -15,24 +15,28 @@ public class App extends JFrame implements ActionListener {
         level1Button = new JButton("Easy Level");
         level2Button = new JButton("Medium Level");
         level3Button = new JButton("Hard Level");
+        level4Button = new JButton("Insane Level");
 
         // Set action commands
         level1Button.setActionCommand("level1");
         level2Button.setActionCommand("level2");
         level3Button.setActionCommand("level3"); // Set action command for level3Button
+        level4Button.setActionCommand("level4"); // Set action command for level3Button
 
         // Add action listeners
         level1Button.addActionListener(this);
         level2Button.addActionListener(this);
         level3Button.addActionListener(this); // Add action listener for level3Button
+        level4Button.addActionListener(this); // Add action listener for level3Button
 
         // Set layout
-        setLayout(new GridLayout(3, 1)); // Adjust layout for three buttons
+        setLayout(new GridLayout(4, 1)); // Adjust layout for three buttons
 
         // Add buttons to the frame
         add(level1Button);
         add(level2Button);
-        add(level3Button); // Add level3Button
+        add(level3Button); 
+        add(level4Button);
 
         setVisible(true);
     }
@@ -60,6 +64,8 @@ public class App extends JFrame implements ActionListener {
             launchSnakeGame(new MediumLevel(600, 600)); // Assuming you have a MediumLevel class
         } else if (command.equals("level3")) {
             launchSnakeGame(new HardLevel(600, 600)); // Assuming you have a HardLevel class
+        } else if (command.equals("level4")) {
+            launchSnakeGame(new InsaneLevel(650, 650)); // Assuming you have a HardLevel class
         }
     }
 

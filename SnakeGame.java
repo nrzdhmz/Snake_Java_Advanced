@@ -51,23 +51,23 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setBackground(Color.black);
         addKeyListener(this);
         setFocusable(true);
-
+    
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
-
-        snakeHead = new Tile(5, 5);
+    
+        snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
         snakeBody = new ArrayList<Tile>();
-
+    
         food = new Tile(10, 10);
         random = new Random();
-        placeFood();
-
+        placeFood(); // Now placeFood() is called after snakeHead is initialized
+    
         velocityX = 1;
         velocityY = 0;
-
+    
         // game timer
         gameLoop = new Timer(130, this); // how long it takes to start timer, milliseconds gone between frames
         gameLoop.start();
-
+    
         homeButton = new JButton("Home");
         homeButton.addActionListener(new ActionListener() {
             @Override
@@ -77,7 +77,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         });
         add(homeButton);
     }
-
+    
     private void returnToHomePage() {
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose();
@@ -277,7 +277,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     private void resetGame() {
-        snakeHead = new Tile(5, 5);
+        snakeHead = new Tile(1, 5);
         snakeBody.clear();
         placeFood();
         velocityX = 1;
