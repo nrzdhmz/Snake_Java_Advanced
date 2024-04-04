@@ -3,8 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
+
 public class App extends JFrame implements ActionListener {
     JButton level1Button, level2Button, level3Button, level4Button; // Added level3Button
+    static Clip backgroundMusicClip; // Static field to hold the background music clip
 
     public App() {
         setTitle("Snake Game");
@@ -58,6 +64,9 @@ public class App extends JFrame implements ActionListener {
         add(level4Button, gbc);
 
         setVisible(true);
+
+        // Start background music
+        playBackgroundMusic();
     }
 
     private void launchSnakeGame(SnakeGame game) {
@@ -86,6 +95,18 @@ public class App extends JFrame implements ActionListener {
             launchSnakeGame(new HardLevel(600, 600)); // Assuming you have a HardLevel class
         } else if (command.equals("level4")) {
             launchSnakeGame(new InsaneLevel(650, 650)); // Assuming you have a HardLevel class
+        }
+    }
+
+    // Method to play background music
+    private static void playBackgroundMusic() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("background_music.wav").getAbsoluteFile());
+            backgroundMusicClip = AudioSystem.getClip();
+            backgroundMusicClip.open(audioInputStream);
+            backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop the background music continuously
+        } catch (Exception ex) {
+            System.out.println("Error playing background music: " + ex.getMessage());
         }
     }
 
