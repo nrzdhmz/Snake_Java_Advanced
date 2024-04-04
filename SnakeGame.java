@@ -113,7 +113,7 @@
             }
         
             // Draw the snake head
-            g.setColor(Color.green); // Set color to green for the snake head
+            g.setColor(new Color(0, 194, 0));
             g.fill3DRect(snakeHead.x * tileSize, snakeHead.y * tileSize, tileSize, tileSize, true);
 
 
@@ -133,26 +133,36 @@
             // Score
             g.setFont(new Font("Arial", Font.PLAIN, 16));
             if (gameOver) {
+                // Game over panel
+                int panelWidth = 300;
+                int panelHeight = 200;
+                int panelX = (boardWidth - panelWidth) / 2;
+                int panelY = (boardHeight - panelHeight) / 2;
+
+                // Draw light gray panel
+                g.setColor(Color.gray);
+                g.fillRect(panelX, panelY, panelWidth, panelHeight);
+
                 Font gameoverFont = new Font("Arial", Font.BOLD, 40);
                 g.setFont(gameoverFont);
                 g.setColor(Color.red);
                 // Calculate the position to center the text
                 FontMetrics fm = g.getFontMetrics();
                 int xGameOver = (boardWidth - fm.stringWidth("Game Over")) / 2;
-                int yGameOver = (boardHeight / 2) - 40; // Position above the center
+                int yGameOver = (boardHeight / 2) - 30; // Position above the center
                 g.drawString("Game Over", xGameOver, yGameOver);
 
                 // Best Score
                 g.setColor(Color.green);
                 String bestScoreString = "Best Score: " + bestScore;
                 int xBestScore = (boardWidth - fm.stringWidth(bestScoreString)) / 2;
-                int yBestScore = boardHeight / 2; // Center of the frame
+                int yBestScore = boardHeight / 2 + 10; // Center of the frame
                 g.drawString(bestScoreString, xBestScore, yBestScore);
 
                 // Score
                 String scoreString = "Score: " + snakeBody.size();
                 int xScore = (boardWidth - fm.stringWidth(scoreString)) / 2;
-                int yScore = (boardHeight / 2) + 40; // Position below the center
+                int yScore = (boardHeight / 2) + 50; // Position below the center
                 g.drawString(scoreString, xScore, yScore);
             } else {
                 // Score

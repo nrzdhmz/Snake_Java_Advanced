@@ -10,7 +10,8 @@ public class App extends JFrame implements ActionListener {
         setTitle("Snake Game");
         setSize(600, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        setLocationRelativeTo(null); // Center the frame on the screen
+        getContentPane().setBackground(Color.gray); // Set background color to black
         // Create buttons
         level1Button = new JButton("Easy Level");
         level2Button = new JButton("Medium Level");
@@ -29,14 +30,32 @@ public class App extends JFrame implements ActionListener {
         level3Button.addActionListener(this); // Add action listener for level3Button
         level4Button.addActionListener(this); // Add action listener for level3Button
 
-        // Set layout
-        setLayout(new GridLayout(4, 1)); // Adjust layout for three buttons
+        // Set preferred sizes for buttons
+        Dimension buttonSize = new Dimension(200, 80);
+        level1Button.setPreferredSize(buttonSize);
+        level2Button.setPreferredSize(buttonSize);
+        level3Button.setPreferredSize(buttonSize);
+        level4Button.setPreferredSize(buttonSize);
 
-        // Add buttons to the frame
-        add(level1Button);
-        add(level2Button);
-        add(level3Button); 
-        add(level4Button);
+        // Set layout
+        setLayout(new GridBagLayout());
+
+        // Add buttons to the frame with constraints to center them
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(level1Button, gbc);
+
+        gbc.gridy = 1;
+        add(level2Button, gbc);
+
+        gbc.gridy = 2;
+        add(level3Button, gbc);
+
+        gbc.gridy = 3;
+        add(level4Button, gbc);
 
         setVisible(true);
     }
@@ -47,6 +66,7 @@ public class App extends JFrame implements ActionListener {
         frame.add(game);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setLocationRelativeTo(null); // Center the game window
         frame.setVisible(true);
 
         // Close the homepage
