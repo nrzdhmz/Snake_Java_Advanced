@@ -64,7 +64,24 @@ public class App extends JFrame implements ActionListener {
     }
 
     private void startGame(String selectedLevel, int selectedFood, Color headColor, Color bodyColor) {
-        SnakeGame snakeGame = new SnakeGame(600, 600, selectedFood);
+        SnakeGame snakeGame;
+        switch (selectedLevel) {
+            case "Easy":
+                snakeGame = new EasyLevel(600, 600, selectedFood);
+                break;
+            case "Medium":
+                snakeGame = new MediumLevel(600, 600, selectedFood);
+                break;
+            case "Hard":
+                snakeGame = new HardLevel(600, 600, selectedFood);
+                break;
+            case "Insane":
+                snakeGame = new InsaneLevel(650, 650, selectedFood);
+                break;
+            default:
+                // Default to Easy level if no valid level selected
+                snakeGame = new SnakeGame(600, 600, selectedFood);
+        }
 
         snakeGame.setHeadColor(headColor);
         snakeGame.setBodyColor(bodyColor);
@@ -120,4 +137,3 @@ public class App extends JFrame implements ActionListener {
         new App();
     }
 }
-

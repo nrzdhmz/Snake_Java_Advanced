@@ -34,7 +34,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     int velocityY;
     Timer gameLoop;
 
-    boolean gameOver = false;
+    boolean gameOver = true;
 
     JButton homeButton;
 
