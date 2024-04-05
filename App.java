@@ -4,41 +4,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class App extends JFrame implements ActionListener {
-    JComboBox<String> levelSelection; // Added JComboBox for level selection
-    JComboBox<Integer> foodSelection; // Added JComboBox for food selection
-    JButton startButton; // Added start button
+    JComboBox<String> levelSelection;
+    JComboBox<Integer> foodSelection;
+    JComboBox<String> colorSelection; // Added JComboBox for snake color selection
+    JButton startButton;
 
     public App() {
         setTitle("Snake Game");
         setSize(600, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the frame on the screen
-        getContentPane().setBackground(Color.gray); // Set background color to black
+        setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.gray);
 
-        // Create JComboBox for level selection
-        String[] levels = {"Easy", "Medium", "Hard", "Insane"}; // Example level options
+        String[] levels = {"Easy", "Medium", "Hard", "Insane"};
         levelSelection = new JComboBox<>(levels);
 
-        // Create JComboBox for food selection
-        Integer[] foodOptions = {1, 3, 5}; // Options for food generation
+        Integer[] foodOptions = {1, 3, 5};
         foodSelection = new JComboBox<>(foodOptions);
 
-        // Create start button
+        // Create JComboBox for snake color selection
+        String[] snakeColors = {"Green", "Blue", "Orange"}; // Add more colors as needed
+        colorSelection = new JComboBox<>(snakeColors);
+
         startButton = new JButton("Start");
-
-        // Set action commands
         startButton.setActionCommand("start");
-
-        // Add action listeners
         startButton.addActionListener(this);
 
-        // Set layout
         setLayout(new GridBagLayout());
 
-        // Add components to the frame with constraints to center them
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Select Level:"), gbc);
@@ -53,43 +49,42 @@ public class App extends JFrame implements ActionListener {
         gbc.gridx = 1;
         add(foodSelection, gbc);
 
+        // Add snake color selection to the frame
         gbc.gridy = 2;
         gbc.gridx = 0;
-        gbc.gridwidth = 2; // Span over two columns
+        add(new JLabel("Select Snake Color:"), gbc);
+
+        gbc.gridx = 1;
+        add(colorSelection, gbc);
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
         add(startButton, gbc);
 
         setVisible(true);
     }
 
-    private void startGame(String selectedLevel, int selectedFood) {
-        // Logic to start the game with the selected level and food amount
-        // Create an instance of the appropriate level class based on the selected level
-        if (selectedLevel.equals("Easy")) {
-            EasyLevel game = new EasyLevel(600, 600, selectedFood);
-            launchSnakeGame(game, selectedFood);
-        } else if (selectedLevel.equals("Medium")) {
-            MediumLevel game = new MediumLevel(600, 600, selectedFood);
-            launchSnakeGame(game, selectedFood);
-        } else if (selectedLevel.equals("Hard")) {
-            HardLevel game = new HardLevel(600, 600, selectedFood);
-            launchSnakeGame(game, selectedFood);
-        } else if (selectedLevel.equals("Insane")) {
-            InsaneLevel game = new InsaneLevel(650, 650, selectedFood);
-            launchSnakeGame(game, selectedFood);
-        }
+    private void startGame(String selectedLevel, int selectedFood, Color snakeColor) {
+        SnakeGame snakeGame = new SnakeGame(600, 600, selectedFood);
+
+        // Set snake color based on the selected color
+        snakeGame.setHeadColor(snakeColor);
+        snakeGame.setBodyColor(snakeColor.darker()); // Set body color to a darker shade of the selected color
+
+        launchSnakeGame(snakeGame, selectedFood);
     }
 
     private void launchSnakeGame(SnakeGame game, int selectedFood) {
-        game.placeFood(selectedFood); // Place food based on selected count
+        game.placeFood(selectedFood);
         JFrame frame = new JFrame("Snake Game");
 
         frame.add(game);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setLocationRelativeTo(null); // Center the game window
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // Close the homepage
         this.dispose();
     }
 
@@ -98,11 +93,28 @@ public class App extends JFrame implements ActionListener {
         String command = e.getActionCommand();
 
         if (command.equals("start")) {
-            // Retrieve selected level and food amount
             String selectedLevel = (String) levelSelection.getSelectedItem();
             int selectedFood = (int) foodSelection.getSelectedItem();
-            // Start the game with selected level and food amount
-            startGame(selectedLevel, selectedFood);
+
+            // Get the selected snake color
+            String selectedColor = (String) colorSelection.getSelectedItem();
+            Color snakeColor = null;
+
+            // Set snake color based on the selected color
+            switch (selectedColor) {
+                case "Green":
+                    snakeColor = Color.GREEN;
+                    break;
+                case "Blue":
+                    snakeColor = Color.BLUE;
+                    break;
+                case "Orange":
+                    snakeColor = Color.ORANGE;
+                    break;
+                // Add more cases for additional colors
+            }
+
+            startGame(selectedLevel, selectedFood, snakeColor);
         }
     }
 

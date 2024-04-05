@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.*;
 
 public class EasyLevel extends SnakeGame {
@@ -48,6 +47,6 @@ public class EasyLevel extends SnakeGame {
     // Method to add obstacles
     private void addObstacles() {
         // Add obstacles in your desired pattern
-        placeFood(selectedFood);
+        // placeFood(selectedFood);
     }
 }

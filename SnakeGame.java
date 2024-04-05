@@ -52,35 +52,34 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     int selectedFood; // Added selectedFood as an instance variable
 
-    SnakeGame(int boardWidth, int boardHeight, int selectedFood) {
+    // Color variables for head and body
+    public Color headColor;
+    public Color bodyColor;
+
+    SnakeGame(int boardWidth, int boardHeight, int selectedFood) { // Modified constructor to accept selectedFood
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         setPreferredSize(new Dimension(this.boardWidth, this.boardHeight));
         setBackground(Color.black);
         addKeyListener(this);
         setFocusable(true);
-    
+
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
-    
+
         snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
         snakeBody = new ArrayList<Tile>();
-    
+
         foodTiles = new ArrayList<>();
         random = new Random();
         placeFood(selectedFood); // Now placeFood() is called after snakeHead is initialized
-    
+
         velocityX = 1;
         velocityY = 0;
-    
+
         // game timer
         gameLoop = new Timer(130, this); // how long it takes to start timer, milliseconds gone between frames
-        
-        // Set gameOver initially to true
-        gameOver = true;
-        
-        // Start the game loop
         gameLoop.start();
-        
+
         homeButton = new JButton("Home");
         homeButton.addActionListener(new ActionListener() {
             @Override
@@ -90,12 +89,16 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         });
         add(homeButton);
         // playBackgroundMusic();
-    
+
         // Load Sound Clips
         loadSoundClips();
-    
+
         movesSinceLastFood = 0; // Initialize the moves counter
         this.selectedFood = selectedFood; // Initialize selectedFood
+
+        // Initialize head and body colors
+        headColor = new Color(0, 250, 0); // Default head color
+        bodyColor = new Color(0, 150, 0); // Default body color
     }
 
     private void returnToHomePage() {
@@ -159,15 +162,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         // Draw the snake body
         for (int i = 0; i < snakeBody.size(); i++) {
             Tile snakePart = snakeBody.get(i);
-            // Calculate color based on position
-            int colorValue = (255 - 150) / (snakeBody.size() + 1) * (snakeBody.size() - i) + 150;
-            Color snakeColor = new Color(0, colorValue, 0);
-            g.setColor(snakeColor);
+            g.setColor(bodyColor);
             g.fill3DRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize, true);
         }
 
         // Draw the snake head
-        g.setColor(new Color(0, 255, 0));
+        g.setColor(headColor);
         g.fill3DRect(snakeHead.x * tileSize, snakeHead.y * tileSize, tileSize, tileSize, true);
 
         if (!gameLoop.isRunning() && !gameOver) {
@@ -200,9 +200,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.setColor(Color.red);
             // Calculate the position to center the text
             FontMetrics fm = g.getFontMetrics();
-            int xGameOver = (boardWidth - fm.stringWidth("Press Space")) / 2;
+            int xGameOver = (boardWidth - fm.stringWidth("Game Over")) / 2;
             int yGameOver = (boardHeight / 2) - 30; // Position above the center
-            g.drawString("Press Space", xGameOver, yGameOver);
+            g.drawString("Game Over", xGameOver, yGameOver);
 
             // Best Score
             g.setColor(Color.green);
@@ -407,6 +407,16 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         if (snakeBody.size() > bestScore) {
             bestScore = snakeBody.size();
         }
+    }
+
+    // Method to set new head color
+    public void setHeadColor(Color color) {
+        headColor = color;
+    }
+
+    // Method to set new body color
+    public void setBodyColor(Color color) {
+        bodyColor = color;
     }
 
     @Override

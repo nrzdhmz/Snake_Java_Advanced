@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.*;
 
 public class InsaneLevel extends SnakeGame {
@@ -76,6 +75,6 @@ public class InsaneLevel extends SnakeGame {
       obstacleGrid[12][6] = true;
 
           // Call placeFood() after adding obstacles
-          placeFood(selectedFood);  
-        }
+        //   placeFood();
+  }
 }
