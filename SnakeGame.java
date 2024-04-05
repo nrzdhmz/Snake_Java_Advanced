@@ -200,9 +200,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.setColor(Color.red);
             // Calculate the position to center the text
             FontMetrics fm = g.getFontMetrics();
-            int xGameOver = (boardWidth - fm.stringWidth("Game Over")) / 2;
+            int xGameOver = (boardWidth - fm.stringWidth("Press Space")) / 2;
             int yGameOver = (boardHeight / 2) - 30; // Position above the center
-            g.drawString("Game Over", xGameOver, yGameOver);
+            g.drawString("Press Space", xGameOver, yGameOver);
 
             // Best Score
             g.setColor(Color.green);

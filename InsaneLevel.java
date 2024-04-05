@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.*;
 
 public class InsaneLevel extends SnakeGame {

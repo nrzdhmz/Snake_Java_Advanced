@@ -45,7 +45,7 @@ public class HardLevel extends SnakeGame {
     }
     
     
-  void addObstacles() {
+  private void addObstacles() {
       // Add obstacles in your desired pattern
           obstacleGrid[0][0] = true;
           obstacleGrid[1][0] = true;
@@ -88,6 +88,6 @@ public class HardLevel extends SnakeGame {
           obstacleGrid[3][7] = true;
 
           // Call placeFood() after adding obstacles
-          placeFood(selectedFood);
+        //   placeFood(selectedFood);
         }
 }
