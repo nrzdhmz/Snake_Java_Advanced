@@ -136,14 +136,14 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         clip.start();
     }
 
+    // Draw method
     public void draw(Graphics g) {
-        // Grid Lines
+        // Grid lines
         for (int i = 0; i < boardWidth / tileSize; i++) {
-            // (x1, y1, x2, y2)
             g.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
             g.drawLine(0, i * tileSize, boardWidth, i * tileSize);
         }
-
+    
         g.setColor(Color.gray);
         // Draw obstacles
         for (int i = 0; i < obstacleGrid.length; i++) {
@@ -153,23 +153,26 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 }
             }
         }
+    
         // Food
         g.setColor(Color.red);
         for (Tile foodTile : foodTiles) {
             g.fill3DRect(foodTile.x * tileSize, foodTile.y * tileSize, tileSize, tileSize, true);
         }
-
+    
         // Draw the snake body
         for (int i = 0; i < snakeBody.size(); i++) {
             Tile snakePart = snakeBody.get(i);
-            g.setColor(bodyColor);
+            Color segmentColor = calculateIntermediateColor(headColor, bodyColor, i, snakeBody.size());
+            g.setColor(segmentColor);
             g.fill3DRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize, true);
         }
-
+    
         // Draw the snake head
         g.setColor(headColor);
         g.fill3DRect(snakeHead.x * tileSize, snakeHead.y * tileSize, tileSize, tileSize, true);
-
+    
+        // Game over message
         if (!gameLoop.isRunning() && !gameOver) {
             g.setFont(new Font("Arial", Font.BOLD, 40));
             g.setColor(Color.red);
@@ -177,11 +180,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             int xPaused = (boardWidth - fm.stringWidth("Game Paused")) / 2;
             int yPaused = boardHeight / 2 - 30;
             g.drawString("Game Paused", xPaused, yPaused);
-
+        
             int xPressSpace = (boardWidth - fm.stringWidth("Press Space")) / 2;
             int yPressSpace = yPaused + 40;
             g.drawString("Press Space", xPressSpace, yPressSpace);
         }
+    
         // Score
         g.setFont(new Font("Arial", Font.PLAIN, 16));
         if (gameOver) {
@@ -226,9 +230,19 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // Paint component method
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
+    }
+
+    // Calculate intermediate color
+    private Color calculateIntermediateColor(Color headColor, Color bodyColor, int bodyIndex, int totalSegments) {
+        float ratio = (float) (totalSegments - bodyIndex) / totalSegments;
+        int red = (int) (headColor.getRed() * ratio + bodyColor.getRed() * (1 - ratio));
+        int green = (int) (headColor.getGreen() * ratio + bodyColor.getGreen() * (1 - ratio));
+        int blue = (int) (headColor.getBlue() * ratio + bodyColor.getBlue() * (1 - ratio));
+        return new Color(red, green, blue);
     }
 
     public void placeFood(int selectedFood) {

@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class App extends JFrame implements ActionListener {
     JComboBox<String> levelSelection;
     JComboBox<Integer> foodSelection;
-    JComboBox<String> colorSelection; // Added JComboBox for snake color selection
+    JComboBox<String> colorSelection;
     JButton startButton;
 
     public App() {
@@ -22,8 +22,7 @@ public class App extends JFrame implements ActionListener {
         Integer[] foodOptions = {1, 3, 5};
         foodSelection = new JComboBox<>(foodOptions);
 
-        // Create JComboBox for snake color selection
-        String[] snakeColors = {"Green", "Blue", "Orange"}; // Add more colors as needed
+        String[] snakeColors = {"Green", "Blue", "Orange"};
         colorSelection = new JComboBox<>(snakeColors);
 
         startButton = new JButton("Start");
@@ -49,7 +48,6 @@ public class App extends JFrame implements ActionListener {
         gbc.gridx = 1;
         add(foodSelection, gbc);
 
-        // Add snake color selection to the frame
         gbc.gridy = 2;
         gbc.gridx = 0;
         add(new JLabel("Select Snake Color:"), gbc);
@@ -65,12 +63,11 @@ public class App extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    private void startGame(String selectedLevel, int selectedFood, Color snakeColor) {
+    private void startGame(String selectedLevel, int selectedFood, Color headColor, Color bodyColor) {
         SnakeGame snakeGame = new SnakeGame(600, 600, selectedFood);
 
-        // Set snake color based on the selected color
-        snakeGame.setHeadColor(snakeColor);
-        snakeGame.setBodyColor(snakeColor.darker()); // Set body color to a darker shade of the selected color
+        snakeGame.setHeadColor(headColor);
+        snakeGame.setBodyColor(bodyColor);
 
         launchSnakeGame(snakeGame, selectedFood);
     }
@@ -96,25 +93,26 @@ public class App extends JFrame implements ActionListener {
             String selectedLevel = (String) levelSelection.getSelectedItem();
             int selectedFood = (int) foodSelection.getSelectedItem();
 
-            // Get the selected snake color
             String selectedColor = (String) colorSelection.getSelectedItem();
-            Color snakeColor = null;
+            Color headColor = null;
+            Color bodyColor = null;
 
-            // Set snake color based on the selected color
             switch (selectedColor) {
                 case "Green":
-                    snakeColor = Color.GREEN;
+                    headColor = new Color(0, 250, 0);
+                    bodyColor = new Color(0, 150, 0); 
                     break;
                 case "Blue":
-                    snakeColor = Color.BLUE;
+                    headColor = new Color(3, 74, 252);
+                    bodyColor = new Color(0, 35, 122); 
                     break;
                 case "Orange":
-                    snakeColor = Color.ORANGE;
+                    headColor = new Color(255, 191, 0);
+                    bodyColor = new Color(143, 107, 0); 
                     break;
-                // Add more cases for additional colors
             }
 
-            startGame(selectedLevel, selectedFood, snakeColor);
+            startGame(selectedLevel, selectedFood, headColor, bodyColor);
         }
     }
 
@@ -122,3 +120,4 @@ public class App extends JFrame implements ActionListener {
         new App();
     }
 }
+
