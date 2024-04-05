@@ -79,6 +79,6 @@ public class MediumLevel extends SnakeGame {
         obstacleGrid[8][0] = true;
 
         // Call placeFood() after adding obstacles
-        // placeFood(selectedFood); // Commented out because it will be called in the constructor
+        placeFood(selectedFood); // Commented out because it will be called in the constructor
     }
 }

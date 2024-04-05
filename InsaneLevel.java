@@ -75,6 +75,6 @@ public class InsaneLevel extends SnakeGame {
       obstacleGrid[12][6] = true;
 
           // Call placeFood() after adding obstacles
-        //   placeFood();
-  }
+          placeFood(selectedFood);  
+        }
 }

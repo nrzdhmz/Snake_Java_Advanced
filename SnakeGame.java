@@ -52,30 +52,35 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     int selectedFood; // Added selectedFood as an instance variable
 
-    SnakeGame(int boardWidth, int boardHeight, int selectedFood) { // Modified constructor to accept selectedFood
+    SnakeGame(int boardWidth, int boardHeight, int selectedFood) {
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         setPreferredSize(new Dimension(this.boardWidth, this.boardHeight));
         setBackground(Color.black);
         addKeyListener(this);
         setFocusable(true);
-
+    
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
-
+    
         snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
         snakeBody = new ArrayList<Tile>();
-
+    
         foodTiles = new ArrayList<>();
         random = new Random();
         placeFood(selectedFood); // Now placeFood() is called after snakeHead is initialized
-
+    
         velocityX = 1;
         velocityY = 0;
-
+    
         // game timer
         gameLoop = new Timer(130, this); // how long it takes to start timer, milliseconds gone between frames
+        
+        // Set gameOver initially to true
+        gameOver = true;
+        
+        // Start the game loop
         gameLoop.start();
-
+        
         homeButton = new JButton("Home");
         homeButton.addActionListener(new ActionListener() {
             @Override
@@ -85,10 +90,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         });
         add(homeButton);
         // playBackgroundMusic();
-
+    
         // Load Sound Clips
         loadSoundClips();
-
+    
         movesSinceLastFood = 0; // Initialize the moves counter
         this.selectedFood = selectedFood; // Initialize selectedFood
     }

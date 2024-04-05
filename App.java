@@ -80,19 +80,17 @@ public class App extends JFrame implements ActionListener {
     }
 
     private void launchSnakeGame(SnakeGame game, int selectedFood) {
-        game.placeFood(selectedFood); // Place food based on selected count
         JFrame frame = new JFrame("Snake Game");
-
         frame.add(game);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null); // Center the game window
         frame.setVisible(true);
-
+    
         // Close the homepage
         this.dispose();
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
