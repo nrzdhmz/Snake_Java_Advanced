@@ -3,17 +3,13 @@ import java.io.*;
 public class EasyLevel extends SnakeGame {
 
     EasyLevel(int boardWidth, int boardHeight, int selectedFood) {
-        super(boardWidth, boardHeight, selectedFood);  // Call the constructor of the parent class
+        super(boardWidth, boardHeight, selectedFood);
 
-        // Load best score
         loadBestScore();
-        // Add obstacles to the obstacleGrid
         addObstacles();
-        // Place food after adding obstacles
         placeFood(selectedFood);
     }
 
-    // Method to load best score from file
     private void loadBestScore() {
         try {
             File file = new File("easy_level_best_score.txt");
@@ -30,9 +26,8 @@ public class EasyLevel extends SnakeGame {
         }
     }
 
-    // Method to update best score in file
     @Override
-    public void updateBestScore() { // Corrected method visibility to match superclass
+    public void updateBestScore() {
         super.updateBestScore();
         try {
             File file = new File("easy_level_best_score.txt");
@@ -44,9 +39,6 @@ public class EasyLevel extends SnakeGame {
         }
     }
     
-    // Method to add obstacles
     private void addObstacles() {
-        // Add obstacles in your desired pattern
-        // placeFood(selectedFood);
     }
 }

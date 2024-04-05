@@ -6,80 +6,89 @@ import javax.swing.*;
 import javax.sound.sampled.*;
 import java.io.File;
 
+// SnakeGame class
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
+    // Tile inner class to represent a single tile in the game board
     public class Tile {
-        int x;
-        int y;
+        int x; // X coordinate of the tile
+        int y; // Y coordinate of the tile
 
+        // Tile constructor
         Tile(int x, int y) {
             this.x = x;
             this.y = y;
         }
     }
 
-    int boardWidth;
-    int boardHeight;
-    int tileSize = 50;
+    // Instance variables
+    int boardWidth; // Width of the game board
+    int boardHeight; // Height of the game board
+    int tileSize = 50; // Size of each tile
 
-    // snake
-    Tile snakeHead;
-    ArrayList<Tile> snakeBody;
+    // Snake variables
+    Tile snakeHead; // Reference to the snake's head tile
+    ArrayList<Tile> snakeBody; // List to store the snake's body segments
 
-    // food
-    ArrayList<Tile> foodTiles;
-    Random random;
+    // Food variables
+    ArrayList<Tile> foodTiles; // List to store food tiles
+    Random random; // Random object for generating random numbers
 
-    // game logic
-    int velocityX;
-    int velocityY;
-    Timer gameLoop;
+    // Game logic variables
+    int velocityX; // Horizontal velocity of the snake
+    int velocityY; // Vertical velocity of the snake
+    Timer gameLoop; // Timer for the game loop
 
-    boolean gameOver = true;
+    boolean gameOver = true; // Flag to indicate if the game is over
 
-    JButton homeButton;
+    JButton homeButton; // Button to return to home page
 
     boolean[][] obstacleGrid; // Grid to track obstacles
 
-    // Best score
-    int bestScore = 0;
+    int bestScore = 0; // Best score achieved in the game
 
     // Sound Clips
-    Clip eatFoodClip;
-    Clip gameOverClip;
-    Clip collisionClip;
+    Clip eatFoodClip; // Sound clip for eating food
+    Clip gameOverClip; // Sound clip for game over
+    Clip collisionClip; // Sound clip for collision
 
     int movesSinceLastFood; // Counter to track moves since last food consumption
 
-    int selectedFood; // Added selectedFood as an instance variable
+    int selectedFood; // Number of food items to be placed on the screen
 
     // Color variables for head and body
-    public Color headColor;
-    public Color bodyColor;
+    public Color headColor; // Color of the snake's head
+    public Color bodyColor; // Color of the snake's body
 
-    SnakeGame(int boardWidth, int boardHeight, int selectedFood) { // Modified constructor to accept selectedFood
+    // SnakeGame constructor
+    SnakeGame(int boardWidth, int boardHeight, int selectedFood) {
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
-        setPreferredSize(new Dimension(this.boardWidth, this.boardHeight));
-        setBackground(Color.black);
-        addKeyListener(this);
-        setFocusable(true);
+        setPreferredSize(new Dimension(this.boardWidth, this.boardHeight)); // Set preferred size of panel
+        setBackground(Color.black); // Set background color
+        addKeyListener(this); // Add key listener to handle user input
+        setFocusable(true); // Set focusable to true to receive key events
 
+        // Initialize obstacle grid
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
 
+        // Initialize snake
         snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
-        snakeBody = new ArrayList<Tile>();
+        snakeBody = new ArrayList<Tile>(); // Initialize snake body
 
-        foodTiles = new ArrayList<>();
-        random = new Random();
-        placeFood(selectedFood); // Now placeFood() is called after snakeHead is initialized
+        // Initialize food
+        foodTiles = new ArrayList<>(); // Initialize food tiles list
+        random = new Random(); // Initialize random object
+        placeFood(selectedFood); // Place food on the game board
 
-        velocityX = 1;
-        velocityY = 0;
+        // Initialize game logic variables
+        velocityX = 1; // Initial horizontal velocity
+        velocityY = 0; // Initial vertical velocity
 
-        // game timer
-        gameLoop = new Timer(130, this); // how long it takes to start timer, milliseconds gone between frames
-        gameLoop.start();
+        // Initialize game loop timer
+        gameLoop = new Timer(130, this); // Set timer delay
+        gameLoop.start(); // Start the game loop timer
 
+        // Initialize home button
         homeButton = new JButton("Home");
         homeButton.addActionListener(new ActionListener() {
             @Override
@@ -88,25 +97,29 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             }
         });
         add(homeButton);
-        // playBackgroundMusic();
 
-        // Load Sound Clips
+        // Load sound clips
         loadSoundClips();
 
-        movesSinceLastFood = 0; // Initialize the moves counter
-        this.selectedFood = selectedFood; // Initialize selectedFood
+        // Initialize moves counter
+        movesSinceLastFood = 0;
+
+        // Initialize selectedFood
+        this.selectedFood = selectedFood;
 
         // Initialize head and body colors
         headColor = new Color(0, 250, 0); // Default head color
         bodyColor = new Color(0, 150, 0); // Default body color
     }
 
+    // Method to return to the home page
     private void returnToHomePage() {
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose();
-        new App();
+        new App(); // Create a new instance of the home page
     }
 
+    // Method to load sound clips
     private void loadSoundClips() {
         try {
             // Load eat food sound
@@ -128,6 +141,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // Method to play sound clip
     private void playSound(Clip clip) {
         if (clip.isRunning()) {
             clip.stop();
@@ -136,14 +150,14 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         clip.start();
     }
 
-    // Draw method
+    // Method to draw game components
     public void draw(Graphics g) {
-        // Grid lines
+        // Draw grid lines
         for (int i = 0; i < boardWidth / tileSize; i++) {
             g.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
             g.drawLine(0, i * tileSize, boardWidth, i * tileSize);
         }
-    
+
         g.setColor(Color.gray);
         // Draw obstacles
         for (int i = 0; i < obstacleGrid.length; i++) {
@@ -153,25 +167,25 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 }
             }
         }
-    
-        // Food
+
+        // Draw food
         g.setColor(Color.red);
         for (Tile foodTile : foodTiles) {
             g.fill3DRect(foodTile.x * tileSize, foodTile.y * tileSize, tileSize, tileSize, true);
         }
-    
-        // Draw the snake body
+
+        // Draw snake body
         for (int i = 0; i < snakeBody.size(); i++) {
             Tile snakePart = snakeBody.get(i);
             Color segmentColor = calculateIntermediateColor(headColor, bodyColor, i, snakeBody.size());
             g.setColor(segmentColor);
             g.fill3DRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize, true);
         }
-    
-        // Draw the snake head
+
+        // Draw snake head
         g.setColor(headColor);
         g.fill3DRect(snakeHead.x * tileSize, snakeHead.y * tileSize, tileSize, tileSize, true);
-    
+
         // Game over message
         if (!gameLoop.isRunning() && !gameOver) {
             g.setFont(new Font("Arial", Font.BOLD, 40));
@@ -180,12 +194,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             int xPaused = (boardWidth - fm.stringWidth("Game Paused")) / 2;
             int yPaused = boardHeight / 2 - 30;
             g.drawString("Game Paused", xPaused, yPaused);
-        
+
             int xPressSpace = (boardWidth - fm.stringWidth("Press Space")) / 2;
             int yPressSpace = yPaused + 40;
             g.drawString("Press Space", xPressSpace, yPressSpace);
         }
-    
+
         // Score
         g.setFont(new Font("Arial", Font.PLAIN, 16));
         if (gameOver) {
@@ -230,13 +244,13 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    // Paint component method
+    // Override paintComponent method to draw components
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
-    // Calculate intermediate color
+    // Method to calculate intermediate color between head and body
     private Color calculateIntermediateColor(Color headColor, Color bodyColor, int bodyIndex, int totalSegments) {
         float ratio = (float) (totalSegments - bodyIndex) / totalSegments;
         int red = (int) (headColor.getRed() * ratio + bodyColor.getRed() * (1 - ratio));
@@ -245,6 +259,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         return new Color(red, green, blue);
     }
 
+    // Method to place food on the game board
     public void placeFood(int selectedFood) {
         while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
             do {
@@ -272,12 +287,13 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // Method to move the snake
     public void move() {
         // Eat food
         for (Tile foodTile : foodTiles) {
             if (collision(snakeHead, foodTile)) {
-                snakeBody.add(new Tile(foodTile.x, foodTile.y));
-                foodTiles.remove(foodTile);
+                snakeBody.add(new Tile(foodTile.x, foodTile.y)); // Add new body segment
+                foodTiles.remove(foodTile); // Remove food tile
                 placeFood(selectedFood); // Generate new food if one is consumed
                 playSound(eatFoodClip); // Play sound when snake eats food
                 break; // Exit the loop after eating one food item
@@ -348,21 +364,24 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // Method to check collision between two tiles
     public boolean collision(Tile tile1, Tile tile2) {
         return tile1.x == tile2.x && tile1.y == tile2.y;
     }
 
+    // Action performed method for game loop
     @Override
-    public void actionPerformed(ActionEvent e) { // called every x milliseconds by gameLoop timer
-        move();
-        repaint();
+    public void actionPerformed(ActionEvent e) {
+        move(); // Move the snake
+        repaint(); // Repaint the panel
         if (gameOver) {
-            gameLoop.stop();
-            updateBestScore();
-            playSound(gameOverClip);
+            gameLoop.stop(); // Stop the game loop
+            updateBestScore(); // Update best score
+            playSound(gameOverClip); // Play game over sound
         }
     }
 
+    // Method to determine if the snake can move based on a cooldown
     private long lastKeyPressTime = 0;
     private static final long MOVEMENT_COOLDOWN = 130;
 
@@ -371,18 +390,19 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         return (currentTime - lastKeyPressTime) >= MOVEMENT_COOLDOWN;
     }
 
+    // Key pressed event handler
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (gameOver) {
-                resetGame();
+                resetGame(); // Reset the game
             } else {
                 if (gameLoop.isRunning()) {
-                    gameLoop.stop();
+                    gameLoop.stop(); // Pause the game loop
                 } else {
-                    gameLoop.start();
+                    gameLoop.start(); // Resume the game loop
                 }
-                repaint();
+                repaint(); // Repaint the panel
             }
         } else if (!gameOver && canMove()) {
             if (e.getKeyCode() == KeyEvent.VK_UP && velocityY != 1) {
@@ -405,21 +425,23 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // Method to reset the game
     private void resetGame() {
-        snakeHead = new Tile(1, 5);
-        snakeBody.clear();
-        foodTiles.clear();
-        placeFood(selectedFood);
-        velocityX = 1;
-        velocityY = 0;
-        gameOver = false;
-        gameLoop.restart();
+        snakeHead = new Tile(1, 5); // Reset snake head position
+        snakeBody.clear(); // Clear snake body
+        foodTiles.clear(); // Clear food tiles
+        placeFood(selectedFood); // Place food on the board
+        velocityX = 1; // Reset horizontal velocity
+        velocityY = 0; // Reset vertical velocity
+        gameOver = false; // Set game over flag to false
+        gameLoop.restart(); // Restart the game loop
         movesSinceLastFood = 0; // Reset moves counter
     }
 
+    // Method to update the best score
     protected void updateBestScore() {
         if (snakeBody.size() > bestScore) {
-            bestScore = snakeBody.size();
+            bestScore = snakeBody.size(); // Update best score if current score is higher
         }
     }
 
@@ -433,6 +455,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         bodyColor = color;
     }
 
+    // Unused key event methods
     @Override
     public void keyReleased(KeyEvent e) {
     }

@@ -4,31 +4,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class App extends JFrame implements ActionListener {
+    // Components for level selection, food amount selection, snake color selection, and start button
     JComboBox<String> levelSelection;
     JComboBox<Integer> foodSelection;
     JComboBox<String> colorSelection;
     JButton startButton;
 
+    // Constructor to initialize the application
     public App() {
-        setTitle("Snake Game");
-        setSize(600, 600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(Color.gray);
+        setTitle("Snake Game"); // Set the title of the frame
+        setSize(600, 600); // Set the size of the frame
+        setDefaultCloseOperation(EXIT_ON_CLOSE); // Set the default close operation
+        setLocationRelativeTo(null); // Center the frame on the screen
+        getContentPane().setBackground(Color.gray); // Set the background color of the content pane
 
+        // Initialize level selection combo box with options
         String[] levels = {"Easy", "Medium", "Hard", "Insane"};
         levelSelection = new JComboBox<>(levels);
 
+        // Initialize food amount selection combo box with options
         Integer[] foodOptions = {1, 3, 5};
         foodSelection = new JComboBox<>(foodOptions);
 
+        // Initialize snake color selection combo box with options
         String[] snakeColors = {"Green", "Blue", "Orange"};
         colorSelection = new JComboBox<>(snakeColors);
 
+        // Initialize start button
         startButton = new JButton("Start");
         startButton.setActionCommand("start");
-        startButton.addActionListener(this);
+        startButton.addActionListener(this); // Add action listener to the start button
 
+        // Set layout for the frame
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -36,22 +43,21 @@ public class App extends JFrame implements ActionListener {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Select Level:"), gbc);
 
+        // Add components to the frame with grid bag constraints
+        add(new JLabel("Select Level:"), gbc);
         gbc.gridx = 1;
         add(levelSelection, gbc);
 
         gbc.gridy = 1;
         gbc.gridx = 0;
         add(new JLabel("Select Food Amount:"), gbc);
-
         gbc.gridx = 1;
         add(foodSelection, gbc);
 
         gbc.gridy = 2;
         gbc.gridx = 0;
         add(new JLabel("Select Snake Color:"), gbc);
-
         gbc.gridx = 1;
         add(colorSelection, gbc);
 
@@ -60,11 +66,13 @@ public class App extends JFrame implements ActionListener {
         gbc.gridwidth = 2;
         add(startButton, gbc);
 
-        setVisible(true);
+        setVisible(true); // Make the frame visible
     }
 
+    // Method to start the game based on selected options
     private void startGame(String selectedLevel, int selectedFood, Color headColor, Color bodyColor) {
         SnakeGame snakeGame;
+        // Create the appropriate level of the snake game based on selected level
         switch (selectedLevel) {
             case "Easy":
                 snakeGame = new EasyLevel(600, 600, selectedFood);
@@ -83,57 +91,64 @@ public class App extends JFrame implements ActionListener {
                 snakeGame = new SnakeGame(600, 600, selectedFood);
         }
 
+        // Set the head and body color of the snake
         snakeGame.setHeadColor(headColor);
         snakeGame.setBodyColor(bodyColor);
 
+        // Launch the snake game
         launchSnakeGame(snakeGame, selectedFood);
     }
 
+    // Method to launch the snake game in a new frame
     private void launchSnakeGame(SnakeGame game, int selectedFood) {
-        game.placeFood(selectedFood);
+        game.placeFood(selectedFood); // Place food on the game board
         JFrame frame = new JFrame("Snake Game");
 
-        frame.add(game);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        frame.add(game); // Add the game panel to the frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set default close operation
+        frame.pack(); // Pack the frame
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
+        frame.setVisible(true); // Make the frame visible
 
-        this.dispose();
+        this.dispose(); // Close the current frame
     }
 
+    // Action performed method to handle button click events
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
         if (command.equals("start")) {
+            // Get selected options for level, food amount, and snake color
             String selectedLevel = (String) levelSelection.getSelectedItem();
             int selectedFood = (int) foodSelection.getSelectedItem();
-
             String selectedColor = (String) colorSelection.getSelectedItem();
             Color headColor = null;
             Color bodyColor = null;
 
+            // Set head and body color based on selected snake color
             switch (selectedColor) {
                 case "Green":
                     headColor = new Color(0, 250, 0);
-                    bodyColor = new Color(0, 150, 0); 
+                    bodyColor = new Color(0, 150, 0);
                     break;
                 case "Blue":
                     headColor = new Color(3, 74, 252);
-                    bodyColor = new Color(0, 35, 122); 
+                    bodyColor = new Color(0, 35, 122);
                     break;
                 case "Orange":
                     headColor = new Color(255, 191, 0);
-                    bodyColor = new Color(143, 107, 0); 
+                    bodyColor = new Color(143, 107, 0);
                     break;
             }
 
+            // Start the game with selected options
             startGame(selectedLevel, selectedFood, headColor, bodyColor);
         }
     }
 
+    // Main method to start the application
     public static void main(String[] args) {
-        new App();
+        new App(); // Create an instance of the application
     }
 }

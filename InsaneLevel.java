@@ -3,17 +3,13 @@ import java.io.*;
 public class InsaneLevel extends SnakeGame {
 
     InsaneLevel(int boardWidth, int boardHeight, int selectedFood) {
-        super(boardWidth, boardHeight, selectedFood);  // Call the constructor of the parent class
+        super(boardWidth, boardHeight, selectedFood);
         
-        // Load best score
         loadBestScore();
-        // Add obstacles to the obstacleGrid
         addObstacles();
-        // Place food after adding obstacles
         placeFood(selectedFood);
     }
 
-    // Method to load best score from file
     private void loadBestScore() {
         try {
             File file = new File("insane_level_best_score.txt");
@@ -30,9 +26,8 @@ public class InsaneLevel extends SnakeGame {
         }
     }
 
-    // Method to update best score in file
     @Override
-    public void updateBestScore() { // Corrected method signature
+    public void updateBestScore() { 
         super.updateBestScore();
         try {
             File file = new File("insane_level_best_score.txt");
@@ -46,7 +41,6 @@ public class InsaneLevel extends SnakeGame {
     
     
   private void addObstacles() {
-      // Add obstacles in your desired pattern
       obstacleGrid[6][0] = true;
       obstacleGrid[6][1] = true;
       obstacleGrid[6][2] = true;
@@ -74,7 +68,5 @@ public class InsaneLevel extends SnakeGame {
       obstacleGrid[11][6] = true;
       obstacleGrid[12][6] = true;
 
-          // Call placeFood() after adding obstacles
-        //   placeFood();
   }
 }

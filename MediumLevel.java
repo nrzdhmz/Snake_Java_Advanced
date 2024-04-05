@@ -3,17 +3,13 @@ import java.io.*;
 public class MediumLevel extends SnakeGame {
 
     MediumLevel(int boardWidth, int boardHeight, int selectedFood) {
-        super(boardWidth, boardHeight, selectedFood); // Call the constructor of the parent class
+        super(boardWidth, boardHeight, selectedFood); 
 
-        // Load best score
         loadBestScore();
-        // Add obstacles to the obstacleGrid
         addObstacles();
-        // Place food after adding obstacles
-        placeFood(selectedFood); // Corrected method call
+        placeFood(selectedFood); 
     }
 
-    // Method to load best score from file
     private void loadBestScore() {
         try {
             File file = new File("medium_level_best_score.txt");
@@ -30,9 +26,8 @@ public class MediumLevel extends SnakeGame {
         }
     }
 
-    // Method to update best score in file
     @Override
-    public void updateBestScore() { // Corrected method signature
+    public void updateBestScore() { 
         super.updateBestScore();
         try {
             File file = new File("medium_level_best_score.txt");
@@ -45,7 +40,6 @@ public class MediumLevel extends SnakeGame {
     }
 
     private void addObstacles() {
-        // Add obstacles in your desired pattern
         obstacleGrid[0][0] = true;
         obstacleGrid[1][0] = true;
         obstacleGrid[2][0] = true;
@@ -77,8 +71,5 @@ public class MediumLevel extends SnakeGame {
         obstacleGrid[10][0] = true;
         obstacleGrid[9][0] = true;
         obstacleGrid[8][0] = true;
-
-        // Call placeFood() after adding obstacles
-        placeFood(selectedFood); // Commented out because it will be called in the constructor
     }
 }
