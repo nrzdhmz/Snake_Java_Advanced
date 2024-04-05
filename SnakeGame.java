@@ -1,14 +1,9 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import java.io.File;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
@@ -31,7 +26,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     ArrayList<Tile> snakeBody;
 
     // food
-    Tile food;
+    ArrayList<Tile> foodTiles;
     Random random;
 
     // game logic
@@ -53,7 +48,11 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     Clip gameOverClip;
     Clip collisionClip;
 
-    SnakeGame(int boardWidth, int boardHeight) {
+    int movesSinceLastFood; // Counter to track moves since last food consumption
+
+    int selectedFood; // Added selectedFood as an instance variable
+
+    SnakeGame(int boardWidth, int boardHeight, int selectedFood) { // Modified constructor to accept selectedFood
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         setPreferredSize(new Dimension(this.boardWidth, this.boardHeight));
@@ -66,9 +65,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
         snakeBody = new ArrayList<Tile>();
 
-        food = new Tile(10, 10);
+        foodTiles = new ArrayList<>();
         random = new Random();
-        placeFood(); // Now placeFood() is called after snakeHead is initialized
+        placeFood(selectedFood); // Now placeFood() is called after snakeHead is initialized
 
         velocityX = 1;
         velocityY = 0;
@@ -89,6 +88,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
         // Load Sound Clips
         loadSoundClips();
+
+        movesSinceLastFood = 0; // Initialize the moves counter
+        this.selectedFood = selectedFood; // Initialize selectedFood
     }
 
     private void returnToHomePage() {
@@ -145,7 +147,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
         // Food
         g.setColor(Color.red);
-        g.fill3DRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize, true);
+        for (Tile foodTile : foodTiles) {
+            g.fill3DRect(foodTile.x * tileSize, foodTile.y * tileSize, tileSize, tileSize, true);
+        }
 
         // Draw the snake body
         for (int i = 0; i < snakeBody.size(); i++) {
@@ -222,38 +226,43 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         draw(g);
     }
 
-    public void placeFood() {
-        do {
-            int foodX = random.nextInt(boardWidth / tileSize);
-            int foodY = random.nextInt(boardHeight / tileSize);
+    public void placeFood(int selectedFood) {
+        while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
+            do {
+                int foodX = random.nextInt(boardWidth / tileSize);
+                int foodY = random.nextInt(boardHeight / tileSize);
 
-            // Check if the food position is not occupied by the snake or inside an obstacle
-            boolean foodOccupied = false;
-            for (Tile snakePart : snakeBody) {
-                if (snakePart.x == foodX && snakePart.y == foodY) {
-                    foodOccupied = true;
-                    break;
+                // Check if the food position is not occupied by the snake or inside an obstacle
+                boolean foodOccupied = false;
+                for (Tile snakePart : snakeBody) {
+                    if (snakePart.x == foodX && snakePart.y == foodY) {
+                        foodOccupied = true;
+                        break;
+                    }
                 }
-            }
 
-            if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
-                // Food position is occupied, generate new position
-                continue;
-            }
+                if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
+                    // Food position is occupied, generate new position
+                    continue;
+                }
 
-            // Food position is valid, place the food
-            food.x = foodX;
-            food.y = foodY;
-            break;
-        } while (true);
+                // Food position is valid, add the food tile to the list
+                foodTiles.add(new Tile(foodX, foodY));
+                break;
+            } while (true);
+        }
     }
 
     public void move() {
         // Eat food
-        if (collision(snakeHead, food)) {
-            snakeBody.add(new Tile(food.x, food.y));
-            placeFood();
-            playSound(eatFoodClip); // Play sound when snake eats food
+        for (Tile foodTile : foodTiles) {
+            if (collision(snakeHead, foodTile)) {
+                snakeBody.add(new Tile(foodTile.x, foodTile.y));
+                foodTiles.remove(foodTile);
+                placeFood(selectedFood); // Generate new food if one is consumed
+                playSound(eatFoodClip); // Play sound when snake eats food
+                break; // Exit the loop after eating one food item
+            }
         }
 
         // Move snake body
@@ -287,7 +296,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         if (obstacleGrid[newHeadX][newHeadY]) {
             // Game over if hitting an obstacle
             gameOver = true;
-            if (collision(snakeHead, food)) {
+            if (collision(snakeHead, foodTiles.get(0))) {
                 playSound(eatFoodClip);
             } else {
                 playSound(collisionClip);
@@ -308,6 +317,15 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 gameOver = true;
                 playSound(collisionClip);
             }
+        }
+
+        // Increment moves counter
+        movesSinceLastFood++;
+
+        // Check if it's time to generate new food items
+        if (movesSinceLastFood >= 5) {
+            placeFood(selectedFood); // Generate new food items
+            movesSinceLastFood = 0; // Reset moves counter
         }
     }
 
@@ -371,47 +389,26 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     private void resetGame() {
         snakeHead = new Tile(1, 5);
         snakeBody.clear();
-        placeFood();
+        foodTiles.clear();
+        placeFood(selectedFood);
         velocityX = 1;
         velocityY = 0;
         gameOver = false;
         gameLoop.restart();
+        movesSinceLastFood = 0; // Reset moves counter
     }
 
-    // not needed
-    @Override
-    public void keyTyped(KeyEvent e) {
+    protected void updateBestScore() {
+        if (snakeBody.size() > bestScore) {
+            bestScore = snakeBody.size();
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
     }
 
-    // Method to retrieve the best score from previous tries
-    int getBestScore() {
-        // You can use any method to store and retrieve the best score,
-        // such as saving it to a file or using a database. For simplicity,
-        // I'll just return the best score variable in this example.
-        return bestScore;
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
-
-    // Method to update the best score
-    void updateBestScore() {
-        if (snakeBody.size() > bestScore) {
-            bestScore = snakeBody.size();
-        }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Snake Game");
-        SnakeGame game = new SnakeGame(600, 600);
-        frame.add(game);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-
-        // Display the best score when the game starts
-        JOptionPane.showMessageDialog(frame, "Best Score: " + game.getBestScore(), "Best Score", JOptionPane.INFORMATION_MESSAGE);
-    }
-
 }

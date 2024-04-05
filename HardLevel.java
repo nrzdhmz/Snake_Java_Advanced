@@ -2,15 +2,15 @@ import java.io.*;
 
 public class HardLevel extends SnakeGame {
 
-    HardLevel(int boardWidth, int boardHeight) {
-        super(boardWidth, boardHeight); // Call the constructor of the parent class
+    HardLevel(int boardWidth, int boardHeight, int selectedFood) {
+        super(boardWidth, boardHeight, selectedFood);  // Call the constructor of the parent class
 
         // Load best score
         loadBestScore();
         // Add obstacles to the obstacleGrid
         addObstacles();
         // Place food after adding obstacles
-        placeFood();
+        placeFood(selectedFood);
     }
 
     // Method to load best score from file
@@ -32,7 +32,7 @@ public class HardLevel extends SnakeGame {
 
     // Method to update best score in file
     @Override
-    void updateBestScore() {
+    public void updateBestScore() { // Corrected method signature
         super.updateBestScore();
         try {
             File file = new File("hard_level_best_score.txt");
@@ -88,6 +88,6 @@ public class HardLevel extends SnakeGame {
           obstacleGrid[3][7] = true;
 
           // Call placeFood() after adding obstacles
-          placeFood();
-  }
+        //   placeFood(selectedFood);
+        }
 }
