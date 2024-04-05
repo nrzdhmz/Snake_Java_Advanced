@@ -1,5 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
@@ -19,6 +23,11 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             this.y = y;
         }
     }
+
+
+    // Instance variables to store start and end times
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     // Instance variables
     int boardWidth; // Width of the game board
@@ -68,6 +77,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         addKeyListener(this); // Add key listener to handle user input
         setFocusable(true); // Set focusable to true to receive key events
 
+        // Initialize start time
+        recordStartTime();
+        
         // Initialize obstacle grid
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
 
@@ -111,6 +123,30 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         headColor = new Color(0, 250, 0); // Default head color
         bodyColor = new Color(0, 150, 0); // Default body color
     }
+
+        // Method to record the start time of the gameplay
+        private void recordStartTime() {
+            startTime = LocalDateTime.now();
+        }
+    
+        // Method to record the end time of the gameplay
+        private void recordEndTime() {
+            endTime = LocalDateTime.now();
+        }
+    
+        // Method to calculate gameplay duration
+        private Duration calculateGameplayDuration() {
+            return Duration.between(startTime, endTime);
+        }
+    
+        // Method to save gameplay time into a text file
+        private void saveGameplayTime(Duration duration) {
+            try (FileWriter writer = new FileWriter("gameplay_time.txt")) {
+                writer.write("Gameplay Time: " + duration.toMinutes() + " minutes " + duration.getSeconds() % 60 + " seconds");
+            } catch (IOException e) {
+                System.err.println("Error writing gameplay time to file: " + e.getMessage());
+            }
+        }
 
     // Method to return to the home page
     private void returnToHomePage() {
@@ -443,6 +479,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         if (snakeBody.size() > bestScore) {
             bestScore = snakeBody.size(); // Update best score if current score is higher
         }
+        // Record end time and save gameplay time
+        recordEndTime();
+        Duration gameplayDuration = calculateGameplayDuration();
+        saveGameplayTime(gameplayDuration);
     }
 
     // Method to set new head color
