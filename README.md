@@ -29,3 +29,4 @@ This game was created by Hamza Nuruzade @nrzdhmz.
 
 License
 This project is licensed under the MIT License.
+try to beat my records :)
