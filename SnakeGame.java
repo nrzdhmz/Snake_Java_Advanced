@@ -9,6 +9,7 @@ import java.util.Random;
 import javax.swing.*;
 import javax.sound.sampled.*;
 import java.io.File;
+import java.util.Scanner;
 
 // SnakeGame class
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
@@ -78,7 +79,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         setFocusable(true); // Set focusable to true to receive key events
 
         // Initialize start time
-        recordStartTime();
+        loadStartTime(); // Load start time if available
         
         // Initialize obstacle grid
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
@@ -124,29 +125,54 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         bodyColor = new Color(0, 150, 0); // Default body color
     }
 
-        // Method to record the start time of the gameplay
-        private void recordStartTime() {
-            startTime = LocalDateTime.now();
-        }
-    
-        // Method to record the end time of the gameplay
-        private void recordEndTime() {
-            endTime = LocalDateTime.now();
-        }
-    
-        // Method to calculate gameplay duration
-        private Duration calculateGameplayDuration() {
-            return Duration.between(startTime, endTime);
-        }
-    
-        // Method to save gameplay time into a text file
-        private void saveGameplayTime(Duration duration) {
-            try (FileWriter writer = new FileWriter("gameplay_time.txt")) {
-                writer.write("Gameplay Time: " + duration.toMinutes() + " minutes " + duration.getSeconds() % 60 + " seconds");
+    // Method to load the start time from a file
+    private void loadStartTime() {
+        File file = new File("start_time.txt");
+        if (file.exists()) {
+            try (Scanner scanner = new Scanner(file)) {
+                String startTimeString = scanner.nextLine();
+                startTime = LocalDateTime.parse(startTimeString);
             } catch (IOException e) {
-                System.err.println("Error writing gameplay time to file: " + e.getMessage());
+                e.printStackTrace();
             }
+        } else {
+            recordStartTime(); // Record start time if file doesn't exist
         }
+    }
+
+    // Method to record the start time of the gameplay
+    private void recordStartTime() {
+        startTime = LocalDateTime.now();
+        saveStartTime(startTime); // Save start time to file
+    }
+
+    // Method to save the start time into a text file
+    private void saveStartTime(LocalDateTime startTime) {
+        try (FileWriter writer = new FileWriter("start_time.txt")) {
+            writer.write(startTime.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to record the end time of the gameplay
+    private void recordEndTime() {
+        endTime = LocalDateTime.now();
+    }
+
+    // Method to calculate gameplay duration
+    private Duration calculateGameplayDuration() {
+        return Duration.between(startTime, endTime);
+    }
+
+    // Method to save gameplay time into a text file
+    private void saveGameplayTime(Duration duration) {
+        try (FileWriter writer = new FileWriter("gameplay_time.txt")) {
+            writer.write("Gameplay Time: " + duration.toMinutes() + " minutes " + duration.getSeconds() % 60 + " seconds");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Method to return to the home page
     private void returnToHomePage() {
@@ -204,11 +230,28 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             }
         }
 
-        // Draw food
+        // Draw food (apple)
         g.setColor(Color.red);
+        int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
         for (Tile foodTile : foodTiles) {
-            g.fill3DRect(foodTile.x * tileSize, foodTile.y * tileSize, tileSize, tileSize, true);
+            int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
+            int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
+            g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
+            
+            // Draw the green leaf (triangle)
+            int leafWidth = appleSize / 2; // Width of the leaf
+            int leafHeight = appleSize / 4; // Height of the leaf
+            int leafX = appleX + appleSize / 4; // Position the leaf horizontally
+            int leafY = appleY - leafHeight; // Position the leaf above the apple
+            Polygon leaf = new Polygon();
+            leaf.addPoint(leafX, leafY); // Top point of the leaf
+            leaf.addPoint(leafX - leafWidth / 2, leafY + leafHeight); // Bottom left point of the leaf
+            leaf.addPoint(leafX + leafWidth / 2, leafY + leafHeight); // Bottom right point of the leaf
+            g.setColor(Color.green);
+            g.fillPolygon(leaf); // Draw the leaf
         }
+
+
 
         // Draw snake body
         for (int i = 0; i < snakeBody.size(); i++) {
@@ -446,8 +489,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         repaint(); // Repaint the panel
         if (gameOver) {
             gameLoop.stop(); // Stop the game loop
-            updateBestScore(); // Update best score
-            playSound(gameOverClip); // Play game over sound
+            recordEndTime(); // Record end time
+            Duration gameplayDuration = calculateGameplayDuration(); // Calculate gameplay duration
+            saveGameplayTime(gameplayDuration); // Save gameplay time
+            // Update best score and handle game over
         }
     }
 
