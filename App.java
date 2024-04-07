@@ -121,7 +121,7 @@ public class App extends JFrame implements ActionListener {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("gameplay_time.txt"));
             String line = reader.readLine();
-            if (line != null && line.startsWith("Gameplay Time:")) {
+            if (line != null && line.startsWith("Working on this project for")) {
                 gameplayTimeLabel.setText(line);
             } else {
                 gameplayTimeLabel.setText("Gameplay Time: N/A");

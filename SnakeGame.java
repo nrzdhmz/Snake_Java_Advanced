@@ -168,7 +168,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     // Method to save gameplay time into a text file
     private void saveGameplayTime(Duration duration) {
         try (FileWriter writer = new FileWriter("gameplay_time.txt")) {
-            writer.write("Gameplay Time: " + duration.toMinutes() + " minutes " + duration.getSeconds() % 60 + " seconds");
+            writer.write("Working on this project for " + duration.toDays() + " days");
         } catch (IOException e) {
             e.printStackTrace();
         }
