@@ -222,6 +222,38 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         g.setColor(headColor);
         g.fill3DRect(snakeHead.x * tileSize, snakeHead.y * tileSize, tileSize, tileSize, true);
 
+        // Draw eyes
+        g.setColor(Color.black);
+        int eyeSize = tileSize / 5; // Size of the eyes
+        int eyeDistance = tileSize / 6; // Distance of the eyes from the edges
+
+        // Calculate eye positions based on the direction of movement
+        if (velocityX > 0) { // Moving right
+            // Draw eyes on the right side of the head
+            int rightEyeX = snakeHead.x * tileSize + tileSize - eyeDistance - eyeSize;
+            int leftEyeX = rightEyeX - eyeDistance - eyeSize; // Calculate position for the left eye
+            int eyeCenterY = snakeHead.y * tileSize + tileSize / 2; // Y coordinate of the eye center
+            g.fillOval(rightEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+            g.fillOval(leftEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+        } else if (velocityX < 0) { // Moving left
+            // Draw eyes on the left side of the head
+            int leftEyeX = snakeHead.x * tileSize + eyeDistance;
+            int rightEyeX = leftEyeX + eyeDistance + eyeSize; // Calculate position for the right eye
+            int eyeCenterY = snakeHead.y * tileSize + tileSize / 2; // Y coordinate of the eye center
+            g.fillOval(leftEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+            g.fillOval(rightEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+        } else { // Moving up or down
+            // Draw eyes at the center of the head vertically
+            int eyeCenterX = snakeHead.x * tileSize + tileSize / 2; // X coordinate of the eye center
+            int eyeCenterY = snakeHead.y * tileSize + tileSize / 2; // Y coordinate of the eye center
+            int leftEyeX = eyeCenterX - eyeDistance - eyeSize / 2;
+            int rightEyeX = eyeCenterX + eyeDistance - eyeSize / 2;
+            g.fillOval(leftEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+            g.fillOval(rightEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
+        }
+
+
+
         // Game over message
         if (!gameLoop.isRunning() && !gameOver) {
             g.setFont(new Font("Arial", Font.BOLD, 40));
@@ -256,7 +288,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             FontMetrics fm = g.getFontMetrics();
             int xGameOver = (boardWidth - fm.stringWidth("Press Space")) / 2;
             int yGameOver = (boardHeight / 2) - 30; // Position above the center
-            g.drawString("Press Space", xGameOver, yGameOver);
+            g.drawString("Game Over", xGameOver, yGameOver);
 
             // Best Score
             g.setColor(Color.green);
@@ -279,6 +311,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.drawString("Best Score: " + bestScore, tileSize - 26, tileSize - 20);
         }
     }
+
+    
 
     // Override paintComponent method to draw components
     public void paintComponent(Graphics g) {
