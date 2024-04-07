@@ -13,17 +13,18 @@ import java.util.Scanner;
 
 // SnakeGame class
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
-    // Tile inner class to represent a single tile in the game board
-    public class Tile {
-        int x; // X coordinate of the tile
-        int y; // Y coordinate of the tile
+// Tile inner class to represent a single tile in the game board
+public class Tile {
+    int x; // X coordinate of the tile
+    int y; // Y coordinate of the tile
+    boolean isYellowApple; // Flag to indicate if the tile represents a fully yellow apple
 
-        // Tile constructor
-        Tile(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+    // Tile constructor
+    Tile(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
+}
 
 
     // Instance variables to store start and end times
@@ -230,15 +231,20 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             }
         }
 
-        // Draw food (apple)
-        int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
-        for (Tile foodTile : foodTiles) {
-            g.setColor(Color.red); // Set color to red for drawing the apple
-            int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
-            int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
-            g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
-            
-            // Draw the green leaf (triangle)
+    // Draw food (apple)
+    int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
+    for (Tile foodTile : foodTiles) {
+        if (foodTile.isYellowApple) {
+            g.setColor(Color.yellow); // Set color to yellow for drawing the fully yellow apple
+        } else {
+            g.setColor(Color.red); // Set color to red for drawing regular apples
+        }
+        int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
+        int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
+        g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
+        
+        // Draw the green leaf (triangle) for regular apples
+        if (!foodTile.isYellowApple) {
             int leafWidth = appleSize / 2; // Width of the leaf
             int leafHeight = appleSize / 4; // Height of the leaf
             int leafX = appleX + appleSize / 4; // Position the leaf horizontally
@@ -250,6 +256,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.setColor(Color.green);
             g.fillPolygon(leaf); // Draw the leaf
         }
+    }
 
 
 
@@ -370,7 +377,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         int blue = (int) (headColor.getBlue() * ratio + bodyColor.getBlue() * (1 - ratio));
         return new Color(red, green, blue);
     }
-
 // Method to place food on the game board
 public void placeFood(int selectedFood) {
     while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
@@ -393,89 +399,100 @@ public void placeFood(int selectedFood) {
             }
 
             // Food position is valid, add the food tile to the list
-            foodTiles.add(new Tile(foodX, foodY));
+            Tile foodTile = new Tile(foodX, foodY);
+            if (random.nextInt(20) == 0) { // 1 in 20 chance for a fully yellow apple
+                foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
+            }
+            foodTiles.add(foodTile);
             break;
         } while (true);
     }
 }
 
 
-    // Method to move the snake
-    public void move() {
-        // Eat food
-        for (Tile foodTile : foodTiles) {
-            if (collision(snakeHead, foodTile)) {
+// Method to move the snake
+public void move() {
+    // Eat food
+    for (Tile foodTile : foodTiles) {
+        if (collision(snakeHead, foodTile)) {
+            if (foodTile.isYellowApple) {
+                for (int i = 0; i < 5; i++) {
+                    snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y)); // Add new body segment 5 times
+                }
+            } else {
                 snakeBody.add(new Tile(foodTile.x, foodTile.y)); // Add new body segment
-                foodTiles.remove(foodTile); // Remove food tile
-                placeFood(selectedFood); // Generate new food if one is consumed
-                playSound(eatFoodClip); // Play sound when snake eats food
-                break; // Exit the loop after eating one food item
             }
-        }
-
-        // Move snake body
-        for (int i = snakeBody.size() - 1; i >= 0; i--) {
-            Tile snakePart = snakeBody.get(i);
-            if (i == 0) { // right before the head
-                snakePart.x = snakeHead.x;
-                snakePart.y = snakeHead.y;
-            } else {
-                Tile prevSnakePart = snakeBody.get(i - 1);
-                snakePart.x = prevSnakePart.x;
-                snakePart.y = prevSnakePart.y;
-            }
-        }
-
-        // Calculate new head position
-        int newHeadX = snakeHead.x + velocityX;
-        int newHeadY = snakeHead.y + velocityY;
-
-        // Check if the new head position is out of bounds
-        if (newHeadX < 0)
-            newHeadX = boardWidth / tileSize - 1;
-        else if (newHeadX >= boardWidth / tileSize)
-            newHeadX = 0;
-        if (newHeadY < 0)
-            newHeadY = boardHeight / tileSize - 1;
-        else if (newHeadY >= boardHeight / tileSize)
-            newHeadY = 0;
-
-        // Check if the new head position is hitting an obstacle
-        if (obstacleGrid[newHeadX][newHeadY]) {
-            // Game over if hitting an obstacle
-            gameOver = true;
-            if (collision(snakeHead, foodTiles.get(0))) {
-                playSound(eatFoodClip);
-            } else {
-                playSound(collisionClip);
-            }
-            return;
-        }
-
-        // Move the snake head
-        snakeHead.x = newHeadX;
-        snakeHead.y = newHeadY;
-
-        // Game over conditions
-        for (int i = 0; i < snakeBody.size(); i++) {
-            Tile snakePart = snakeBody.get(i);
-
-            // Collide with snake head
-            if (collision(snakeHead, snakePart)) {
-                gameOver = true;
-                playSound(collisionClip);
-            }
-        }
-
-        // Increment moves counter
-        movesSinceLastFood++;
-
-        // Check if it's time to generate new food items
-        if (movesSinceLastFood >= 5) {
-            placeFood(selectedFood); // Generate new food items
-            movesSinceLastFood = 0; // Reset moves counter
+            foodTiles.remove(foodTile); // Remove food tile
+            placeFood(selectedFood); // Generate new food if one is consumed
+            playSound(eatFoodClip); // Play sound when snake eats food
+            break; // Exit the loop after eating one food item
         }
     }
+
+    // Move snake body
+    for (int i = snakeBody.size() - 1; i >= 0; i--) {
+        Tile snakePart = snakeBody.get(i);
+        if (i == 0) { // right before the head
+            snakePart.x = snakeHead.x;
+            snakePart.y = snakeHead.y;
+        } else {
+            Tile prevSnakePart = snakeBody.get(i - 1);
+            snakePart.x = prevSnakePart.x;
+            snakePart.y = prevSnakePart.y;
+        }
+    }
+
+    // Calculate new head position
+    int newHeadX = snakeHead.x + velocityX;
+    int newHeadY = snakeHead.y + velocityY;
+
+    // Check if the new head position is out of bounds
+    if (newHeadX < 0)
+        newHeadX = boardWidth / tileSize - 1;
+    else if (newHeadX >= boardWidth / tileSize)
+        newHeadX = 0;
+    if (newHeadY < 0)
+        newHeadY = boardHeight / tileSize - 1;
+    else if (newHeadY >= boardHeight / tileSize)
+        newHeadY = 0;
+
+    // Check if the new head position is hitting an obstacle
+    if (obstacleGrid[newHeadX][newHeadY]) {
+        // Game over if hitting an obstacle
+        gameOver = true;
+        if (collision(snakeHead, foodTiles.get(0))) {
+            playSound(eatFoodClip);
+        } else {
+            playSound(collisionClip);
+        }
+        return;
+    }
+
+    // Move the snake head
+    snakeHead.x = newHeadX;
+    snakeHead.y = newHeadY;
+
+    // Game over conditions
+    for (int i = 0; i < snakeBody.size(); i++) {
+        Tile snakePart = snakeBody.get(i);
+
+        // Collide with snake head
+        if (collision(snakeHead, snakePart)) {
+            gameOver = true;
+            playSound(collisionClip);
+        }
+    }
+
+    // Increment moves counter
+    movesSinceLastFood++;
+
+    // Check if it's time to generate new food items
+    if (movesSinceLastFood >= 5) {
+        placeFood(selectedFood); // Generate new food items
+        movesSinceLastFood = 0; // Reset moves counter
+    }
+}
+
 
     // Method to check collision between two tiles
     public boolean collision(Tile tile1, Tile tile2) {
