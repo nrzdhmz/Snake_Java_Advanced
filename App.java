@@ -2,18 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class App extends JFrame implements ActionListener {
-    // Components for username input, level selection, food amount selection, snake color selection, and start button
-    JTextField usernameField;
+    // Components for level selection, food amount selection, snake color selection, and start button
     JComboBox<String> levelSelection;
     JComboBox<Integer> foodSelection;
     JComboBox<String> colorSelection;
     JButton startButton;
-    JLabel gameplayTimeLabel; // Label to display gameplay time
 
     // Constructor to initialize the application
     public App() {
@@ -22,9 +17,6 @@ public class App extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE); // Set the default close operation
         setLocationRelativeTo(null); // Center the frame on the screen
         getContentPane().setBackground(Color.gray); // Set the background color of the content pane
-
-        // Initialize username input field
-        usernameField = new JTextField(20);
 
         // Initialize level selection combo box with options
         String[] levels = {"Easy", "Medium", "Hard", "Insane"};
@@ -43,12 +35,6 @@ public class App extends JFrame implements ActionListener {
         startButton.setActionCommand("start");
         startButton.addActionListener(this); // Add action listener to the start button
 
-        // Initialize gameplay time label
-        gameplayTimeLabel = new JLabel();
-        gameplayTimeLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        gameplayTimeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-        updateGameplayTime(); // Update gameplay time label initially
-
         // Set layout for the frame
         setLayout(new GridBagLayout());
 
@@ -59,37 +45,26 @@ public class App extends JFrame implements ActionListener {
         gbc.gridy = 0;
 
         // Add components to the frame with grid bag constraints
-        add(new JLabel("Enter Username:"), gbc);
-        gbc.gridx = 1;
-        add(usernameField, gbc);
-
-        gbc.gridy = 1;
-        gbc.gridx = 0;
         add(new JLabel("Select Level:"), gbc);
         gbc.gridx = 1;
         add(levelSelection, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridx = 0;
         add(new JLabel("Select Food Amount:"), gbc);
         gbc.gridx = 1;
         add(foodSelection, gbc);
 
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.gridx = 0;
         add(new JLabel("Select Snake Color:"), gbc);
         gbc.gridx = 1;
         add(colorSelection, gbc);
 
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         add(startButton, gbc);
-
-        gbc.gridy = 5;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        add(gameplayTimeLabel, gbc);
 
         setVisible(true); // Make the frame visible
     }
@@ -123,23 +98,6 @@ public class App extends JFrame implements ActionListener {
         // Launch the snake game
         launchSnakeGame(snakeGame, selectedFood);
     }
-
-        // Method to update gameplay time label with content from the file
-        private void updateGameplayTime() {
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader("gameplay_time.txt"));
-                String line = reader.readLine();
-                if (line != null && line.startsWith("Gameplay Time:")) {
-                    gameplayTimeLabel.setText(line);
-                } else {
-                    gameplayTimeLabel.setText("Gameplay Time: N/A");
-                }
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                gameplayTimeLabel.setText("Gameplay Time: N/A");
-            }
-        }
 
     // Method to launch the snake game in a new frame
     private void launchSnakeGame(SnakeGame game, int selectedFood) {
