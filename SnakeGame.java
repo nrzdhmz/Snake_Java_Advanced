@@ -237,17 +237,29 @@ public class Tile {
         int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
         for (Tile foodTile : foodTiles) {
             g.setColor(Color.red); // Default color for regular apples
-    
             if (foodTile.isYellowApple) {
                 g.setColor(Color.yellow); // Yellow apple
             } else if (foodTile.isPurpleApple) {
                 g.setColor(new Color(128, 0, 128)); // Purple apple
             }
-    
+
             int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
             int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
             g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
             
+            // Draw the '?' sign inside the purple apple
+            if (foodTile.isPurpleApple) {
+                g.setColor(Color.white); // Color for the question mark
+                Font font = new Font("Arial", Font.BOLD, 20); // Define the font
+                g.setFont(font); // Set the font
+                String questionMark = "?"; // The question mark character
+                // Calculate the position to center the question mark inside the apple
+                FontMetrics fm = g.getFontMetrics(font);
+                int x = appleX + (appleSize - fm.stringWidth(questionMark)) / 2;
+                int y = appleY + (appleSize + fm.getAscent()) / 2;
+                g.drawString(questionMark, x, y); // Draw the question mark
+            }
+
             // Draw the green leaf (triangle) for both regular and fully yellow apples
             int leafWidth = appleSize / 2; // Width of the leaf
             int leafHeight = appleSize / 4; // Height of the leaf
@@ -377,43 +389,47 @@ public class Tile {
         int blue = (int) (headColor.getBlue() * ratio + bodyColor.getBlue() * (1 - ratio));
         return new Color(red, green, blue);
     }
-// Method to place food on the game board
-public void placeFood(int selectedFood) {
-    while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
-        do {
-            int foodX = random.nextInt(boardWidth / tileSize);
-            int foodY = random.nextInt(boardHeight / tileSize);
+    // Method to place food on the game board
+    public void placeFood(int selectedFood) {
+        while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
+            do {
+                int foodX = random.nextInt(boardWidth / tileSize);
+                int foodY = random.nextInt(boardHeight / tileSize);
 
-            // Check if the food position is not occupied by the snake or inside an obstacle
-            boolean foodOccupied = false;
-            for (Tile snakePart : snakeBody) {
-                if (snakePart.x == foodX && snakePart.y == foodY) {
-                    foodOccupied = true;
-                    break;
+                // Check if the food position is not occupied by the snake or inside an obstacle
+                boolean foodOccupied = false;
+                for (Tile snakePart : snakeBody) {
+                    if (snakePart.x == foodX && snakePart.y == foodY) {
+                        foodOccupied = true;
+                        break;
+                    }
                 }
-            }
 
-            if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
-                // Food position is occupied, generate new position
-                continue;
-            }
+                if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
+                    // Food position is occupied, generate new position
+                    continue;
+                }
 
-            // Food position is valid, add the food tile to the list
-            Tile foodTile = new Tile(foodX, foodY);
-            int randomNum = random.nextInt(30); // Random number between 0 and 29
-            if (randomNum == 0) {
-                // 1 in 30 chance for a purple apple
-                foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
-            } else if (randomNum < 2) {
-                // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
-                foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
-            }
-            // Regular apple will be generated if neither purple nor yellow
-            foodTiles.add(foodTile);
-            break;
-        } while (true);
+                // Food position is valid, add the food tile to the list
+                Tile foodTile = new Tile(foodX, foodY);
+                if (snakeBody.size() >= 1) { // Check if the snake's body has at least one segment
+                    int randomNum = random.nextInt(30); // Random number between 0 and 29
+                    if (randomNum == 0) {
+                        // 1 in 30 chance for a purple apple
+                        foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
+                    } else if (randomNum < 2) {
+                        // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
+                        foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
+                    }
+                }
+                // Regular apple will be generated if neither purple nor yellow
+                foodTiles.add(foodTile);
+                break;
+            } while (true);
+        }
     }
-}
+
+
 
 
 
