@@ -33,7 +33,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     // Instance variables
     int boardWidth; // Width of the game board
     int boardHeight; // Height of the game board
-    int tileSize = 50; // Size of each tile
+    int tileSize = 40; // Size of each tile
 
     // Snake variables
     Tile snakeHead; // Reference to the snake's head tile
@@ -295,8 +295,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.fillOval(leftEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
             g.fillOval(rightEyeX, eyeCenterY - eyeSize / 2, eyeSize, eyeSize);
         }
-
-
 
         // Game over message
         if (!gameLoop.isRunning() && !gameOver) {

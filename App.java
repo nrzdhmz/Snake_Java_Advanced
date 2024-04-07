@@ -101,7 +101,7 @@ public class App extends JFrame implements ActionListener {
                 snakeGame = new HardLevel(600, 600, selectedFood);
                 break;
             case "Insane":
-                snakeGame = new InsaneLevel(650, 650, selectedFood);
+                snakeGame = new InsaneLevel(600, 600, selectedFood);
                 break;
             default:
                 // Default to Easy level if no valid level selected

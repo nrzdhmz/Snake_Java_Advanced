@@ -41,32 +41,36 @@ public class InsaneLevel extends SnakeGame {
     
     
   private void addObstacles() {
-      obstacleGrid[6][0] = true;
-      obstacleGrid[6][1] = true;
-      obstacleGrid[6][2] = true;
-      obstacleGrid[6][3] = true;
-      obstacleGrid[6][4] = true;
-      obstacleGrid[6][5] = true;
-      obstacleGrid[6][6] = true;
-      obstacleGrid[6][7] = true;
-      obstacleGrid[6][8] = true;
-      obstacleGrid[6][9] = true;
-      obstacleGrid[6][10] = true;
-      obstacleGrid[6][11] = true;
-      obstacleGrid[6][12] = true;
-
-      obstacleGrid[0][6] = true;
-      obstacleGrid[1][6] = true;
-      obstacleGrid[2][6] = true;
-      obstacleGrid[3][6] = true;
-      obstacleGrid[4][6] = true;
-      obstacleGrid[5][6] = true;
+      obstacleGrid[7][0] = true;
+      obstacleGrid[7][1] = true;
+      obstacleGrid[7][2] = true;
+      obstacleGrid[7][3] = true;
+      obstacleGrid[7][4] = true;
+      obstacleGrid[7][5] = true;
       obstacleGrid[7][6] = true;
-      obstacleGrid[8][6] = true;
-      obstacleGrid[9][6] = true;
-      obstacleGrid[10][6] = true;
-      obstacleGrid[11][6] = true;
-      obstacleGrid[12][6] = true;
+      obstacleGrid[7][8] = true;
+      obstacleGrid[7][9] = true;
+      obstacleGrid[7][10] = true;
+      obstacleGrid[7][11] = true;
+      obstacleGrid[7][12] = true;
+      obstacleGrid[7][13] = true;
+      obstacleGrid[7][14] = true;
+
+      obstacleGrid[0][7] = true;
+      obstacleGrid[1][7] = true;
+      obstacleGrid[2][7] = true;
+      obstacleGrid[3][7] = true;
+      obstacleGrid[4][7] = true;
+      obstacleGrid[5][7] = true;
+      obstacleGrid[6][7] = true;
+      obstacleGrid[7][7] = true;
+      obstacleGrid[8][7] = true;
+      obstacleGrid[9][7] = true;
+      obstacleGrid[10][7] = true;
+      obstacleGrid[11][7] = true;
+      obstacleGrid[12][7] = true;
+      obstacleGrid[13][7] = true;
+      obstacleGrid[14][7] = true;
 
   }
 }
