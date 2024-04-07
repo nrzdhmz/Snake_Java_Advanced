@@ -231,9 +231,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
 
         // Draw food (apple)
-        g.setColor(Color.red);
         int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
         for (Tile foodTile : foodTiles) {
+            g.setColor(Color.red); // Set color to red for drawing the apple
             int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
             int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
             g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
@@ -250,6 +250,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
             g.setColor(Color.green);
             g.fillPolygon(leaf); // Draw the leaf
         }
+
 
 
 
@@ -372,33 +373,34 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         return new Color(red, green, blue);
     }
 
-    // Method to place food on the game board
-    public void placeFood(int selectedFood) {
-        while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
-            do {
-                int foodX = random.nextInt(boardWidth / tileSize);
-                int foodY = random.nextInt(boardHeight / tileSize);
+// Method to place food on the game board
+public void placeFood(int selectedFood) {
+    while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
+        do {
+            int foodX = random.nextInt(boardWidth / tileSize);
+            int foodY = random.nextInt(boardHeight / tileSize);
 
-                // Check if the food position is not occupied by the snake or inside an obstacle
-                boolean foodOccupied = false;
-                for (Tile snakePart : snakeBody) {
-                    if (snakePart.x == foodX && snakePart.y == foodY) {
-                        foodOccupied = true;
-                        break;
-                    }
+            // Check if the food position is not occupied by the snake or inside an obstacle
+            boolean foodOccupied = false;
+            for (Tile snakePart : snakeBody) {
+                if (snakePart.x == foodX && snakePart.y == foodY) {
+                    foodOccupied = true;
+                    break;
                 }
+            }
 
-                if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
-                    // Food position is occupied, generate new position
-                    continue;
-                }
+            if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
+                // Food position is occupied, generate new position
+                continue;
+            }
 
-                // Food position is valid, add the food tile to the list
-                foodTiles.add(new Tile(foodX, foodY));
-                break;
-            } while (true);
-        }
+            // Food position is valid, add the food tile to the list
+            foodTiles.add(new Tile(foodX, foodY));
+            break;
+        } while (true);
     }
+}
+
 
     // Method to move the snake
     public void move() {
