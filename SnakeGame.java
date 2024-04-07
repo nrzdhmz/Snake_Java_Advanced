@@ -18,6 +18,7 @@ public class Tile {
     int x; // X coordinate of the tile
     int y; // Y coordinate of the tile
     boolean isYellowApple; // Flag to indicate if the tile represents a fully yellow apple
+    boolean isPurpleApple; // Flag to indicate if the tile represents a purple apple
 
     // Tile constructor
     Tile(int x, int y) {
@@ -25,6 +26,7 @@ public class Tile {
         this.y = y;
     }
 }
+
 
 
     // Instance variables to store start and end times
@@ -220,7 +222,7 @@ public class Tile {
             g.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
             g.drawLine(0, i * tileSize, boardWidth, i * tileSize);
         }
-
+    
         g.setColor(Color.gray);
         // Draw obstacles
         for (int i = 0; i < obstacleGrid.length; i++) {
@@ -230,21 +232,23 @@ public class Tile {
                 }
             }
         }
-
-    // Draw food (apple)
-    int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
-    for (Tile foodTile : foodTiles) {
-        if (foodTile.isYellowApple) {
-            g.setColor(Color.yellow); // Set color to yellow for drawing the fully yellow apple
-        } else {
-            g.setColor(Color.red); // Set color to red for drawing regular apples
-        }
-        int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
-        int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
-        g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
-        
-        // Draw the green leaf (triangle) for regular apples
-        if (!foodTile.isYellowApple) {
+    
+        // Draw food (apple)
+        int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
+        for (Tile foodTile : foodTiles) {
+            g.setColor(Color.red); // Default color for regular apples
+    
+            if (foodTile.isYellowApple) {
+                g.setColor(Color.yellow); // Yellow apple
+            } else if (foodTile.isPurpleApple) {
+                g.setColor(new Color(128, 0, 128)); // Purple apple
+            }
+    
+            int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
+            int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
+            g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
+            
+            // Draw the green leaf (triangle) for both regular and fully yellow apples
             int leafWidth = appleSize / 2; // Width of the leaf
             int leafHeight = appleSize / 4; // Height of the leaf
             int leafX = appleX + appleSize / 4; // Position the leaf horizontally
@@ -256,18 +260,14 @@ public class Tile {
             g.setColor(Color.green);
             g.fillPolygon(leaf); // Draw the leaf
         }
+
+    // Draw snake body
+    for (int i = 0; i < snakeBody.size(); i++) {
+        Tile snakePart = snakeBody.get(i);
+        Color segmentColor = calculateIntermediateColor(headColor, bodyColor, i, snakeBody.size());
+        g.setColor(segmentColor);
+        g.fill3DRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize, true);
     }
-
-
-
-
-        // Draw snake body
-        for (int i = 0; i < snakeBody.size(); i++) {
-            Tile snakePart = snakeBody.get(i);
-            Color segmentColor = calculateIntermediateColor(headColor, bodyColor, i, snakeBody.size());
-            g.setColor(segmentColor);
-            g.fill3DRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize, true);
-        }
 
         // Draw snake head
         g.setColor(headColor);
@@ -400,14 +400,22 @@ public void placeFood(int selectedFood) {
 
             // Food position is valid, add the food tile to the list
             Tile foodTile = new Tile(foodX, foodY);
-            if (random.nextInt(20) == 0) { // 1 in 20 chance for a fully yellow apple
+            int randomNum = random.nextInt(30); // Random number between 0 and 29
+            if (randomNum == 0) {
+                // 1 in 30 chance for a purple apple
+                foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
+            } else if (randomNum < 2) {
+                // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
                 foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
             }
+            // Regular apple will be generated if neither purple nor yellow
             foodTiles.add(foodTile);
             break;
         } while (true);
     }
 }
+
+
 
 
 // Method to move the snake
@@ -416,17 +424,38 @@ public void move() {
     for (Tile foodTile : foodTiles) {
         if (collision(snakeHead, foodTile)) {
             if (foodTile.isYellowApple) {
+                // Eat yellow apple
                 for (int i = 0; i < 5; i++) {
                     snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y)); // Add new body segment 5 times
                 }
+            } else if (foodTile.isPurpleApple) {
+                // Determine luck for purple apple
+             boolean gainPoints = Math.random() < 0.40; // 35% chance to gain points
+            if (gainPoints) {
+                // Add 10 points for eating a purple apple
+                for (int i = 0; i < 10; i++) {
+                    snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y)); // Add new body segment 10 times
+                }
             } else {
+                if (snakeBody.size() > 10) {
+                    // Remove 10 points if body size is greater than 10
+                    for (int i = 0; i < 10; i++) {
+                        snakeBody.remove(snakeBody.size() - 1); // Remove last body segment 10 times
+                    }
+                } else {
+                    // If body size is less than or equal to 10, reset points to 0
+                    snakeBody.clear();
+                }
+            }
+            } else {
+                // Eat regular apple
                 snakeBody.add(new Tile(foodTile.x, foodTile.y)); // Add new body segment
             }
             foodTiles.remove(foodTile); // Remove food tile
             placeFood(selectedFood); // Generate new food if one is consumed
             playSound(eatFoodClip); // Play sound when snake eats food
             break; // Exit the loop after eating one food item
-        }
+        }   
     }
 
     // Move snake body
@@ -600,4 +629,4 @@ public void move() {
     @Override
     public void keyTyped(KeyEvent e) {
     }
-}
+}   
