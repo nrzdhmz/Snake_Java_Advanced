@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class App extends JFrame implements ActionListener {
     // Components for level selection, food amount selection, snake color selection, and start button
@@ -9,6 +12,7 @@ public class App extends JFrame implements ActionListener {
     JComboBox<Integer> foodSelection;
     JComboBox<String> colorSelection;
     JButton startButton;
+    JLabel gameplayTimeLabel; // Label to display gameplay time
 
     // Constructor to initialize the application
     public App() {
@@ -35,6 +39,12 @@ public class App extends JFrame implements ActionListener {
         startButton.setActionCommand("start");
         startButton.addActionListener(this); // Add action listener to the start button
 
+        // Initialize gameplay time label
+        gameplayTimeLabel = new JLabel();
+        gameplayTimeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        gameplayTimeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+        updateGameplayTime(); // Update gameplay time label initially
+
         // Set layout for the frame
         setLayout(new GridBagLayout());
 
@@ -45,6 +55,8 @@ public class App extends JFrame implements ActionListener {
         gbc.gridy = 0;
 
         // Add components to the frame with grid bag constraints
+        gbc.gridy = 0;
+        gbc.gridx = 0;
         add(new JLabel("Select Level:"), gbc);
         gbc.gridx = 1;
         add(levelSelection, gbc);
@@ -65,6 +77,11 @@ public class App extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         add(startButton, gbc);
+
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        add(gameplayTimeLabel, gbc);
 
         setVisible(true); // Make the frame visible
     }
@@ -97,6 +114,23 @@ public class App extends JFrame implements ActionListener {
 
         // Launch the snake game
         launchSnakeGame(snakeGame, selectedFood);
+    }
+
+    // Method to update gameplay time label with content from the file
+    private void updateGameplayTime() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("gameplay_time.txt"));
+            String line = reader.readLine();
+            if (line != null && line.startsWith("Gameplay Time:")) {
+                gameplayTimeLabel.setText(line);
+            } else {
+                gameplayTimeLabel.setText("Gameplay Time: N/A");
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            gameplayTimeLabel.setText("Gameplay Time: N/A");
+        }
     }
 
     // Method to launch the snake game in a new frame
