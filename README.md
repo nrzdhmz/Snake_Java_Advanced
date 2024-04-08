@@ -1,3 +1,4 @@
+
 Snake Game
 Introduction
 This project is a simple implementation of the classic Snake Game using Java Swing. The game offers a nostalgic experience of controlling a snake to eat food and grow longer while avoiding collisions with obstacles and itself.
@@ -31,4 +32,4 @@ This project utilizes concepts of object-oriented programming in Java.
 Sound effects obtained from Freesound.
 Inspiration and guidance from various online tutorials and resources.
 Contributors
-Hamza Nuruzada @nrzdhmz
+Your Name - Hamza Nuruzade @nrzdhmz
