@@ -400,14 +400,14 @@ public class Tile {
         // Iterate through existing food tiles
         for (Tile foodTile : foodTiles) {
             // Check if it's a yellow apple and its visibility duration has passed
-            if (foodTile.isYellowApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 8) {
+            if (foodTile.isYellowApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
                 // Change color to red and set points to 1
                 foodTile.isYellowApple = false;
                 foodTile.creationTime = currentTime; // Update creation time
             }
 
             // Check if it's a purple apple and its visibility duration has passed
-            if (foodTile.isPurpleApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 8) {
+            if (foodTile.isPurpleApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
                 // Change color to red and set points to 1
                 foodTile.isPurpleApple = false;
                 foodTile.creationTime = currentTime; // Update creation time
@@ -459,7 +459,7 @@ public class Tile {
                                 isRed = !isRed; // Toggle color
                             }
                         });
-                        purpleAppleTimer.setInitialDelay(4000); // Start toggling after 3 seconds
+                        purpleAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
                         purpleAppleTimer.setRepeats(true); // Repeat the toggle
                         purpleAppleTimer.start(); // Start the timer
                     } else if (randomNum < 2) {
@@ -481,7 +481,7 @@ public class Tile {
                                 isRed = !isRed; // Toggle color
                             }
                         });
-                        yellowAppleTimer.setInitialDelay(4000); // Start toggling after 3 seconds
+                        yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
                         yellowAppleTimer.setRepeats(true); // Repeat the toggle
                         yellowAppleTimer.start(); // Start the timer
                     }
