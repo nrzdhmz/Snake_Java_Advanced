@@ -19,13 +19,16 @@ public class Tile {
     int y; // Y coordinate of the tile
     boolean isYellowApple; // Flag to indicate if the tile represents a fully yellow apple
     boolean isPurpleApple; // Flag to indicate if the tile represents a purple apple
+    LocalDateTime creationTime; // Timestamp indicating the creation time of the food
 
     // Tile constructor
     Tile(int x, int y) {
         this.x = x;
         this.y = y;
+        this.creationTime = LocalDateTime.now(); // Record creation time
     }
 }
+
 
 
 
@@ -88,7 +91,7 @@ public class Tile {
         obstacleGrid = new boolean[boardWidth / tileSize][boardHeight / tileSize];
 
         // Initialize snake
-        snakeHead = new Tile(0, 5); // Initialize snake head with provided coordinates
+        snakeHead = new Tile(0, 6); // Initialize snake head with provided coordinates
         snakeBody = new ArrayList<Tile>(); // Initialize snake body
 
         // Initialize food
@@ -391,6 +394,16 @@ public class Tile {
     }
     // Method to place food on the game board
     public void placeFood(int selectedFood) {
+        LocalDateTime currentTime = LocalDateTime.now(); // Get current time
+
+        for (Tile foodTile : foodTiles) {
+            if (foodTile.isYellowApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 8) {
+                // Change color to red and set points to 1
+                foodTile.isYellowApple = false;
+                foodTile.creationTime = currentTime; // Update creation time
+            }
+        }
+
         while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
             do {
                 int foodX = random.nextInt(boardWidth / tileSize);
@@ -420,17 +433,16 @@ public class Tile {
                     } else if (randomNum < 2) {
                         // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
                         foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
+                        foodTile.creationTime = currentTime; // Record creation time
                     }
                 }
+
                 // Regular apple will be generated if neither purple nor yellow
                 foodTiles.add(foodTile);
                 break;
             } while (true);
         }
     }
-
-
-
 
 
 
@@ -605,7 +617,7 @@ public void move() {
 
     // Method to reset the game
     private void resetGame() {
-        snakeHead = new Tile(1, 5); // Reset snake head position
+        snakeHead = new Tile(0, 6); // Reset snake head position
         snakeBody.clear(); // Clear snake body
         foodTiles.clear(); // Clear food tiles
         placeFood(selectedFood); // Place food on the board

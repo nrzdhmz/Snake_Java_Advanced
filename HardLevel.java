@@ -47,41 +47,38 @@ public class HardLevel extends SnakeGame {
     obstacleGrid[0][1] = true;
     obstacleGrid[0][2] = true;
     
-    obstacleGrid[4][3] = true;
-    obstacleGrid[4][4] = true;
-    obstacleGrid[3][4] = true;
+    obstacleGrid[5][4] = true;
+    obstacleGrid[5][5] = true;
+    obstacleGrid[4][5] = true;
     
-    obstacleGrid[0][11] = true;
     obstacleGrid[0][12] = true;
     obstacleGrid[0][13] = true;
-    obstacleGrid[1][13] = true;
-    obstacleGrid[2][13] = true;
+    obstacleGrid[0][14] = true;
+    obstacleGrid[1][14] = true;
+    obstacleGrid[2][14] = true;
     
-    obstacleGrid[7][3] = true;
-    obstacleGrid[7][4] = true;
-    obstacleGrid[8][4] = true;
+    obstacleGrid[9][4] = true;
+    obstacleGrid[9][5] = true;
+    obstacleGrid[10][5] = true;
     
-    obstacleGrid[11][13] = true;
-    obstacleGrid[12][13] = true;
-    obstacleGrid[13][13] = true;
-    obstacleGrid[13][11] = true;
-    obstacleGrid[13][12] = true;
+    obstacleGrid[12][14] = true;
+    obstacleGrid[13][14] = true;
+    obstacleGrid[14][14] = true;
+    obstacleGrid[14][12] = true;
+    obstacleGrid[14][13] = true;
     
-    obstacleGrid[7][10] = true;
-    obstacleGrid[7][9] = true;
-    obstacleGrid[8][9] = true;
+    obstacleGrid[9][10] = true;
+    obstacleGrid[9][9] = true;
+    obstacleGrid[10][9] = true;
     
+    obstacleGrid[14][0] = true;
+    obstacleGrid[14][1] = true;
+    obstacleGrid[14][2] = true;
     obstacleGrid[13][0] = true;
-    obstacleGrid[13][1] = true;
-    obstacleGrid[13][2] = true;
     obstacleGrid[12][0] = true;
-    obstacleGrid[11][0] = true;
     
-    obstacleGrid[4][10] = true;
+    obstacleGrid[5][10] = true;
+    obstacleGrid[5][9] = true;
     obstacleGrid[4][9] = true;
-    obstacleGrid[3][9] = true;
-    
-    
-
         }
 }
