@@ -41,7 +41,7 @@ public class App extends JFrame implements ActionListener {
         levelGroup.add(insaneRadioButton);
 
         // Initialize food amount selection radio buttons
-        oneFoodRadioButton = new JRadioButton("1");
+        oneFoodRadioButton = new JRadioButton("2");
         threeFoodRadioButton = new JRadioButton("3");
         fiveFoodRadioButton = new JRadioButton("5");
 

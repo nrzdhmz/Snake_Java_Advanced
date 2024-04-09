@@ -59,7 +59,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         setPreferredSize(new Dimension(this.boardWidth, this.boardHeight)); // Set preferred size of panel
-        setBackground(Color.black); // Set background color
         addKeyListener(this); // Add key listener to handle user input
         setFocusable(true); // Set focusable to true to receive key events
 
@@ -149,11 +148,28 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     }
 
     public void draw(Graphics g) {
+        // Define RGB colors for white and black squares
+        Color whiteColor = new Color(23, 23, 23); // RGB for white color
+        Color blackColor = new Color(71, 61, 61); // RGB for black color
+    
+        // Draw chessboard-like background
+        for (int row = 0; row < boardHeight / tileSize; row++) {
+            for (int col = 0; col < boardWidth / tileSize; col++) {
+                if ((row + col) % 2 == 0) {
+                    g.setColor(whiteColor); // Set color to white for even squares
+                } else {
+                    g.setColor(blackColor); // Set color to black for odd squares
+                }
+                g.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Fill rectangle
+            }
+        }
+    
         // Draw grid lines
         for (int i = 0; i < boardWidth / tileSize; i++) {
             g.drawLine(i * tileSize, 0, i * tileSize, boardHeight);
             g.drawLine(0, i * tileSize, boardWidth, i * tileSize);
         }
+    
         // Draw obstacles
         ObstacleDrawer.drawObstacles(g, tileSize, obstacleGrid);
         // Draw foods using FoodDrawer class
@@ -163,8 +179,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         // Draw GameOver and Pause
         GameRenderer.drawGameOverMessage(g, boardWidth, boardHeight, !gameLoop.isRunning() && !gameOver);
         GameRenderer.drawScore(g, boardWidth, boardHeight, tileSize, snakeBody.size(), bestScore, gameOver);
-
     }
+    
+    
     // Override paintComponent method to draw components
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

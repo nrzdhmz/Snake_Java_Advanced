@@ -9,7 +9,7 @@ public class FoodManager {
                 // Handle food consumption logic here
                 if (foodTile.isYellowApple) {
                     // Increase snake's length by 5 for yellow apple
-                    for (int j = 0; j < 5; j++) {
+                    for (int j = 0; j < 10; j++) {
                         snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y));
                     }
                 } else if (foodTile.isPurpleApple) {
