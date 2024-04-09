@@ -369,22 +369,51 @@ public void moveSpecialApple() {
             int newX = specialApple.x;
             int newY = specialApple.y;
 
-            // Try moving horizontally first
-            newX += (dx > 0 && isValidPosition(newX + 1, newY)) ? 1 : 
-                    (dx < 0 && isValidPosition(newX - 1, newY)) ? -1 : 0;
-
-            // Try moving vertically
-            newY += (dy > 0 && isValidPosition(newX, newY + 1)) ? 1 : 
-                    (dy < 0 && isValidPosition(newX, newY - 1)) ? -1 : 0;
-
-            // Update the position of the special apple if the new position is valid
-            if (isValidPosition(newX, newY)) {
-                specialApple.x = newX;
-                specialApple.y = newY;
+            // If not stuck, prioritize moving towards an open direction
+            if (dx != 0) {
+                int newDx = (dx > 0) ? 1 : -1;
+                if (isValidPosition(newX + newDx, newY)) {
+                    newX += newDx;
+                }
             }
+
+            if (dy != 0) {
+                int newDy = (dy > 0) ? 1 : -1;
+                if (isValidPosition(newX, newY + newDy)) {
+                    newY += newDy;
+                }
+            }
+
+            // If both directions are blocked, randomly choose a valid direction to move
+            if (newX == specialApple.x && newY == specialApple.y) {
+                ArrayList<Point> validDirections = new ArrayList<>();
+                if (isValidPosition(newX + 1, newY)) {
+                    validDirections.add(new Point(1, 0));
+                }
+                if (isValidPosition(newX - 1, newY)) {
+                    validDirections.add(new Point(-1, 0));
+                }
+                if (isValidPosition(newX, newY + 1)) {
+                    validDirections.add(new Point(0, 1));
+                }
+                if (isValidPosition(newX, newY - 1)) {
+                    validDirections.add(new Point(0, -1));
+                }
+                
+                if (!validDirections.isEmpty()) {
+                    Point randomDirection = validDirections.get(random.nextInt(validDirections.size()));
+                    newX += randomDirection.x;
+                    newY += randomDirection.y;
+                }
+            }
+
+            // Update the position of the special apple
+            specialApple.x = newX;
+            specialApple.y = newY;
         }
     }
 }
+
 
 
 // Method to check if a position is valid (not colliding with snake body, hitting game boundaries, containing an apple, or hitting obstacles)
