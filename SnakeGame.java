@@ -82,7 +82,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         // Initialize food
         foodTiles = new ArrayList<>(); // Initialize food tiles list
         random = new Random(); // Initialize random object
-        placeFood(selectedFood); // Place food on the game board
+        // placeFood(selectedFood); // Place food on the game board
 
         // Initialize game logic variables
         velocityX = 1; // Initial horizontal velocity
@@ -171,106 +171,107 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         draw(g);
     }
 
-    // Method to place food on the game board
-    public void placeFood(int selectedFood) {
-        LocalDateTime currentTime = LocalDateTime.now(); // Get current time
+// Method to place food on the game board
+public void placeFood(int selectedFood) {
+    LocalDateTime currentTime = LocalDateTime.now(); // Get current time
 
-        // Iterate through existing food tiles
-        for (Tile foodTile : foodTiles) {
-            // Check if it's a yellow apple and its visibility duration has passed
-            if (foodTile.isYellowApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
-                // Change color to red and set points to 1
-                foodTile.isYellowApple = false;
-                foodTile.creationTime = currentTime; // Update creation time
-            }
-
-            // Check if it's a purple apple and its visibility duration has passed
-            if (foodTile.isPurpleApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
-                // Change color to red and set points to 1
-                foodTile.isPurpleApple = false;
-                foodTile.creationTime = currentTime; // Update creation time
-            }
+    // Iterate through existing food tiles
+    for (Tile foodTile : foodTiles) {
+        // Check if it's a yellow apple and its visibility duration has passed
+        if (foodTile.isYellowApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
+            // Change color to red and set points to 1
+            foodTile.isYellowApple = false;
+            foodTile.creationTime = currentTime; // Update creation time
         }
 
-        // Generate new food tiles
-        while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
-            do {
-                // Generate random position for the new food tile
-                int foodX = random.nextInt(boardWidth / tileSize);
-                int foodY = random.nextInt(boardHeight / tileSize);
-
-                // Check if the position is not occupied by the snake or inside an obstacle
-                boolean foodOccupied = false;
-                for (Tile snakePart : snakeBody) {
-                    if (snakePart.x == foodX && snakePart.y == foodY) {
-                        foodOccupied = true;
-                        break;
-                    }
-                }
-
-                if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
-                    // Food position is occupied, generate new position
-                    continue;
-                }
-
-                // Food position is valid, add the food tile to the list
-                Tile foodTile = new Tile(foodX, foodY);
-                // Check if the snake's body has at least one segment
-                if (snakeBody.size() >= 1) {
-                    int randomNum = random.nextInt(20); // Random number between 0 and 29
-                    if (randomNum == 0) {
-                        // 1 in 30 chance for a purple apple
-                        foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
-                        foodTile.creationTime = currentTime; // Record creation time
-
-                        // Set up a timer to toggle the color of the purple apple between red and purple
-                        Timer purpleAppleTimer = new Timer(500, new ActionListener() {
-                            boolean isRed = true;
-
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if (isRed) {
-                                    foodTile.isPurpleApple = false; // Change color to red
-                                } else {
-                                    foodTile.isPurpleApple = true; // Change color to purple
-                                }
-                                isRed = !isRed; // Toggle color
-                            }
-                        });
-                        purpleAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
-                        purpleAppleTimer.setRepeats(true); // Repeat the toggle
-                        purpleAppleTimer.start(); // Start the timer
-                    } else if (randomNum < 2) {
-                        // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
-                        foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
-                        foodTile.creationTime = currentTime; // Record creation time
-
-                        // Set up a timer to toggle the color of the yellow apple between red and yellow
-                        Timer yellowAppleTimer = new Timer(500, new ActionListener() {
-                            boolean isRed = true;
-
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                if (isRed) {
-                                    foodTile.isYellowApple = false; // Change color to red
-                                } else {
-                                    foodTile.isYellowApple = true; // Change color to yellow
-                                }
-                                isRed = !isRed; // Toggle color
-                            }
-                        });
-                        yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
-                        yellowAppleTimer.setRepeats(true); // Repeat the toggle
-                        yellowAppleTimer.start(); // Start the timer
-                    }
-                }
-
-                // Regular apple will be generated if neither purple nor yellow
-                foodTiles.add(foodTile);
-                break;
-            } while (true);
+        // Check if it's a purple apple and its visibility duration has passed
+        if (foodTile.isPurpleApple && Duration.between(foodTile.creationTime, currentTime).getSeconds() >= 6) {
+            // Change color to red and set points to 1
+            foodTile.isPurpleApple = false;
+            foodTile.creationTime = currentTime; // Update creation time
         }
     }
+
+    // Generate new food tiles
+    while (foodTiles.size() < selectedFood) { // Ensure maximum of selectedFood food items on the screen
+        do {
+            // Generate random position for the new food tile
+            int foodX = random.nextInt(boardWidth / tileSize);
+            int foodY = random.nextInt(boardHeight / tileSize);
+
+            // Check if the position is not occupied by the snake or inside an obstacle
+            boolean foodOccupied = false;
+            for (Tile snakePart : snakeBody) {
+                if (snakePart.x == foodX && snakePart.y == foodY) {
+                    foodOccupied = true;
+                    break;
+                }
+            }
+
+            if (foodOccupied || (snakeHead.x == foodX && snakeHead.y == foodY) || obstacleGrid[foodX][foodY]) {
+                // Food position is occupied, generate new position
+                continue;
+            }
+
+            // Food position is valid, add the food tile to the list
+            Tile foodTile = new Tile(foodX, foodY);
+            // Check if the snake's body has at least one segment
+            if (snakeBody.size() >= 1) {
+                int randomNum = random.nextInt(20); // Random number between 0 and 29
+                if (randomNum == 0) {
+                    // 1 in 30 chance for a purple apple
+                    foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
+                    foodTile.creationTime = currentTime; // Record creation time
+
+                    // Set up a timer to toggle the color of the purple apple between red and purple
+                    Timer purpleAppleTimer = new Timer(500, new ActionListener() {
+                        boolean isRed = true;
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (isRed) {
+                                foodTile.isPurpleApple = false; // Change color to red
+                            } else {
+                                foodTile.isPurpleApple = true; // Change color to purple
+                            }
+                            isRed = !isRed; // Toggle color
+                        }
+                    });
+                    purpleAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
+                    purpleAppleTimer.setRepeats(true); // Repeat the toggle
+                    purpleAppleTimer.start(); // Start the timer
+                } else if (randomNum < 2) {
+                    // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
+                    foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
+                    foodTile.creationTime = currentTime; // Record creation time
+
+                    // Set up a timer to toggle the color of the yellow apple between red and yellow
+                    Timer yellowAppleTimer = new Timer(500, new ActionListener() {
+                        boolean isRed = true;
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (isRed) {
+                                foodTile.isYellowApple = false; // Change color to red
+                            } else {
+                                foodTile.isYellowApple = true; // Change color to yellow
+                            }
+                            isRed = !isRed; // Toggle color
+                        }
+                    });
+                    yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
+                    yellowAppleTimer.setRepeats(true); // Repeat the toggle
+                    yellowAppleTimer.start(); // Start the timer
+                }
+            }
+
+            // Regular apple will be generated if neither purple nor yellow
+            foodTiles.add(foodTile);
+            break;
+        } while (true);
+    }
+}
+
 
 // Method to move the snake
 public void move() {
@@ -453,4 +454,4 @@ public void move() {
     @Override
     public void keyTyped(KeyEvent e) {
     }
-} 
+}

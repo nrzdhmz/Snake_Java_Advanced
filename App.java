@@ -18,9 +18,14 @@ public class App extends JFrame implements ActionListener {
     public App() {
         setTitle("Snake Game"); // Set the title of the frame
         setSize(600, 600); // Set the size of the frame
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE); // Set the default close operation
         setLocationRelativeTo(null); // Center the frame on the screen
         getContentPane().setBackground(Color.gray); // Set the background color of the content pane
+
+        // Set the icon of the frame
+        ImageIcon icon = new ImageIcon("logo.png");
+        setIconImage(icon.getImage());
 
         // Initialize level selection combo box with options
         String[] levels = {"Easy", "Medium", "Hard", "Insane"};
@@ -54,7 +59,7 @@ public class App extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        // Add components to the frame with grid bag constraints
+        // Add components to the frame with grid bag constraints  git remote add origin https://github.com/nrzdhmz/Snake_Java_Advanced.git
         gbc.gridy = 0;
         gbc.gridx = 0;
         add(new JLabel("Select Level:"), gbc);
@@ -180,11 +185,10 @@ public class App extends JFrame implements ActionListener {
             startGame(selectedLevel, selectedFood, headColor, bodyColor);
         }
     }
-
-    // Main method to start the application
-    public static void main(String[] args) {
-        new App(); // Create an instance of the application
-    }
+        // Main method to start the application
+        public static void main(String[] args) {
+            new App(); // Create an instance of the application
+        }
 }
 
 

@@ -13,7 +13,7 @@ public class FoodManager {
                     }
                 } else if (foodTile.isPurpleApple) {
                     // Determine the effect of purple apple
-                    boolean gainPoints = Math.random() < 0.40; // 40% chance to gain points
+                    boolean gainPoints = Math.random() < 0.50; // 50% chance to gain points
                     if (gainPoints) {
                         // Increase snake's length by 10 for gaining points
                         for (int j = 0; j < 10; j++) {
