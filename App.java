@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class App extends JFrame implements ActionListener {
     // Components for level selection, food amount selection, snake color selection, and start button
-    JComboBox<String> levelSelection;
-    JComboBox<Integer> foodSelection;
-    JComboBox<String> colorSelection;
+    JRadioButton easyRadioButton, mediumRadioButton, hardRadioButton, insaneRadioButton;
+    JRadioButton oneFoodRadioButton, threeFoodRadioButton, fiveFoodRadioButton;
+    JRadioButton greenRadioButton, blueRadioButton, orangeRadioButton;
     JButton startButton;
     JLabel gameplayTimeLabel; // Label to display gameplay time
 
@@ -27,17 +27,40 @@ public class App extends JFrame implements ActionListener {
         ImageIcon icon = new ImageIcon("logo.png");
         setIconImage(icon.getImage());
 
-        // Initialize level selection combo box with options
-        String[] levels = {"Easy", "Medium", "Hard", "Insane"};
-        levelSelection = new JComboBox<>(levels);
+        // Initialize level selection radio buttons
+        easyRadioButton = new JRadioButton("Easy");
+        mediumRadioButton = new JRadioButton("Medium");
+        hardRadioButton = new JRadioButton("Hard");
+        insaneRadioButton = new JRadioButton("Insane");
 
-        // Initialize food amount selection combo box with options
-        Integer[] foodOptions = {1, 3, 5};
-        foodSelection = new JComboBox<>(foodOptions);
+        // Group level selection radio buttons
+        ButtonGroup levelGroup = new ButtonGroup();
+        levelGroup.add(easyRadioButton);
+        levelGroup.add(mediumRadioButton);
+        levelGroup.add(hardRadioButton);
+        levelGroup.add(insaneRadioButton);
 
-        // Initialize snake color selection combo box with options
-        String[] snakeColors = {"Green", "Blue", "Orange"};
-        colorSelection = new JComboBox<>(snakeColors);
+        // Initialize food amount selection radio buttons
+        oneFoodRadioButton = new JRadioButton("1");
+        threeFoodRadioButton = new JRadioButton("3");
+        fiveFoodRadioButton = new JRadioButton("5");
+
+        // Group food amount selection radio buttons
+        ButtonGroup foodGroup = new ButtonGroup();
+        foodGroup.add(oneFoodRadioButton);
+        foodGroup.add(threeFoodRadioButton);
+        foodGroup.add(fiveFoodRadioButton);
+
+        // Initialize snake color selection radio buttons
+        greenRadioButton = new JRadioButton("Green");
+        blueRadioButton = new JRadioButton("Blue");
+        orangeRadioButton = new JRadioButton("Orange");
+
+        // Group snake color selection radio buttons
+        ButtonGroup colorGroup = new ButtonGroup();
+        colorGroup.add(greenRadioButton);
+        colorGroup.add(blueRadioButton);
+        colorGroup.add(orangeRadioButton);
 
         // Initialize start button
         startButton = new JButton("Start");
@@ -59,33 +82,47 @@ public class App extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        // Add components to the frame with grid bag constraints  git remote add origin https://github.com/nrzdhmz/Snake_Java_Advanced.git
+        // Add components to the frame with grid bag constraints
         gbc.gridy = 0;
         gbc.gridx = 0;
         add(new JLabel("Select Level:"), gbc);
         gbc.gridx = 1;
-        add(levelSelection, gbc);
+        add(easyRadioButton, gbc);
+        gbc.gridx = 2;
+        add(mediumRadioButton, gbc);
+        gbc.gridx = 3;
+        add(hardRadioButton, gbc);
+        gbc.gridx = 4;
+        add(insaneRadioButton, gbc);
 
         gbc.gridy = 1;
         gbc.gridx = 0;
         add(new JLabel("Select Food Amount:"), gbc);
         gbc.gridx = 1;
-        add(foodSelection, gbc);
+        add(oneFoodRadioButton, gbc);
+        gbc.gridx = 2;
+        add(threeFoodRadioButton, gbc);
+        gbc.gridx = 3;
+        add(fiveFoodRadioButton, gbc);
 
         gbc.gridy = 2;
         gbc.gridx = 0;
         add(new JLabel("Select Snake Color:"), gbc);
         gbc.gridx = 1;
-        add(colorSelection, gbc);
+        add(greenRadioButton, gbc);
+        gbc.gridx = 2;
+        add(blueRadioButton, gbc);
+        gbc.gridx = 3;
+        add(orangeRadioButton, gbc);
 
         gbc.gridy = 3;
         gbc.gridx = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 4;
         add(startButton, gbc);
 
         gbc.gridy = 4;
         gbc.gridx = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 4;
         add(gameplayTimeLabel, gbc);
 
         setVisible(true); // Make the frame visible
@@ -155,40 +192,34 @@ public class App extends JFrame implements ActionListener {
     // Action performed method to handle button click events
     @Override
     public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-
-        if (command.equals("start")) {
-            // Get selected options for level, food amount, and snake color
-            String selectedLevel = (String) levelSelection.getSelectedItem();
-            int selectedFood = (int) foodSelection.getSelectedItem();
-            String selectedColor = (String) colorSelection.getSelectedItem();
-            Color headColor = null;
-            Color bodyColor = null;
-
-            // Set head and body color based on selected snake color
-            switch (selectedColor) {
-                case "Green":
-                    headColor = new Color(0, 250, 0);
-                    bodyColor = new Color(0, 150, 0);
-                    break;
-                case "Blue":
-                    headColor = new Color(3, 74, 252);
-                    bodyColor = new Color(0, 35, 122);
-                    break;
-                case "Orange":
-                    headColor = new Color(255, 191, 0);
-                    bodyColor = new Color(143, 107, 0);
-                    break;
+        if (easyRadioButton.isSelected() || mediumRadioButton.isSelected() || hardRadioButton.isSelected() || insaneRadioButton.isSelected()) {
+            if (oneFoodRadioButton.isSelected() || threeFoodRadioButton.isSelected() || fiveFoodRadioButton.isSelected()) {
+                if (greenRadioButton.isSelected() || blueRadioButton.isSelected() || orangeRadioButton.isSelected()) {
+                    String selectedLevel = easyRadioButton.isSelected() ? "Easy" :
+                            mediumRadioButton.isSelected() ? "Medium" :
+                            hardRadioButton.isSelected() ? "Hard" : "Insane";
+                    int selectedFood = oneFoodRadioButton.isSelected() ? 1 :
+                            threeFoodRadioButton.isSelected() ? 3 : 5;
+                    Color headColor = greenRadioButton.isSelected() ? new Color(0, 250, 0) :
+                            blueRadioButton.isSelected() ? new Color(55, 91, 152) :
+                            new Color(255, 255, 0);
+                    Color bodyColor = greenRadioButton.isSelected() ? new Color(0, 150, 0) :
+                            blueRadioButton.isSelected() ? new Color(255, 187, 1) :
+                            new Color(127, 0, 127);
+                    startGame(selectedLevel, selectedFood, headColor, bodyColor);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please select a snake color.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a food amount.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            // Start the game with selected options
-            startGame(selectedLevel, selectedFood, headColor, bodyColor);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a level.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-        // Main method to start the application
-        public static void main(String[] args) {
-            new App(); // Create an instance of the application
-        }
+
+    // Main method to start the application
+    public static void main(String[] args) {
+        new App(); // Create an instance of the application
+    }
 }
-
-
