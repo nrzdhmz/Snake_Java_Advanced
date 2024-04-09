@@ -272,7 +272,7 @@ public void placeFood(int selectedFood) {
             }
 
             // Regular apple will be generated if neither special, purple, nor yellow
-            foodTiles.add(foodTile);
+            foodTiles.add(foodTile);    
             break;
         } while (true);
     }
@@ -282,7 +282,12 @@ public void placeFood(int selectedFood) {
 // Method to move the snake
 public void move() {
     // Eat food
-    FoodManager.eatFood(snakeHead, foodTiles, snakeBody);
+    boolean foodEaten = FoodManager.eatFood(snakeHead, foodTiles, snakeBody);
+    
+    // Play eat food sound if food is eaten
+    if (foodEaten) {
+        playEatFoodSound();
+    }
     
     // Move snake body
     for (int i = snakeBody.size() - 1; i >= 0; i--) {
@@ -349,6 +354,7 @@ public void move() {
         movesSinceLastFood = 0; // Reset moves counter
     }
 }
+
 
 
 public void moveSpecialApple() {
