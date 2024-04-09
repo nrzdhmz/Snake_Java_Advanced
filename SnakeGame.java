@@ -353,46 +353,57 @@ public void move() {
 
 public void moveSpecialApple() {
     // Iterate through each special apple in the foodTiles list
-    for (Tile foodTile : foodTiles) {
-        if (foodTile.isSpecialApple) {
+    for (Tile specialApple : foodTiles) {
+        if (specialApple.isSpecialApple) {
             // Calculate the direction for the special apple to move away from the snake's head
-            int dx = foodTile.x - snakeHead.x;
-            int dy = foodTile.y - snakeHead.y;
+            int dx = specialApple.x - snakeHead.x;
+            int dy = specialApple.y - snakeHead.y;
 
             // Determine the new position for the special apple
-            int newX = foodTile.x;
-            int newY = foodTile.y;
+            int newX = specialApple.x;
+            int newY = specialApple.y;
 
-            // Choose the direction in which the special apple should move (away from the snake's head)
-            if (Math.abs(dx) > Math.abs(dy)) {
-                newX += (dx > 0) ? 1 : -1; // Move horizontally away from the snake's head
-            } else {
-                newY += (dy > 0) ? 1 : -1; // Move vertically away from the snake's head
-            }
+            // Try moving horizontally first
+            newX += (dx > 0 && isValidPosition(newX + 1, newY)) ? 1 : 
+                    (dx < 0 && isValidPosition(newX - 1, newY)) ? -1 : 0;
 
-            // Check if the new position is valid
+            // Try moving vertically
+            newY += (dy > 0 && isValidPosition(newX, newY + 1)) ? 1 : 
+                    (dy < 0 && isValidPosition(newX, newY - 1)) ? -1 : 0;
+
+            // Update the position of the special apple if the new position is valid
             if (isValidPosition(newX, newY)) {
-                foodTile.x = newX;
-                foodTile.y = newY;
+                specialApple.x = newX;
+                specialApple.y = newY;
             }
         }
     }
 }
 
 
-// Method to check if a position is valid (not colliding with snake body or hitting game boundaries)
+// Method to check if a position is valid (not colliding with snake body, hitting game boundaries, or containing an apple)
 private boolean isValidPosition(int x, int y) {
+    // Check if the position is within the game boundaries
     if (x < 0 || x >= boardWidth / tileSize || y < 0 || y >= boardHeight / tileSize) {
         return false; // Out of bounds
     }
+    
+    // Check if the position collides with the snake body
     for (Tile snakePart : snakeBody) {
         if (snakePart.x == x && snakePart.y == y) {
             return false; // Colliding with snake body
         }
     }
-    return true;
+    
+    // Check if the position contains an apple
+    for (Tile foodTile : foodTiles) {
+        if ((foodTile.isYellowApple || foodTile.isPurpleApple || foodTile.isSpecialApple) && foodTile.x == x && foodTile.y == y) {
+            return false; // An apple is found at the specified position
+        }
+    }
+    
+    return true; // The position is valid
 }
-
 
 
     // Method to check collision between two tiles
