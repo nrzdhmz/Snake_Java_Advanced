@@ -5,6 +5,7 @@ public class Tile {
     int y;
     boolean isYellowApple;
     boolean isPurpleApple;
+    boolean isSpecialApple; // New property to indicate if the tile is a special apple
     LocalDateTime creationTime;
 
     Tile(int x, int y) {

@@ -200,10 +200,10 @@ public class App extends JFrame implements ActionListener {
                             hardRadioButton.isSelected() ? "Hard" : "Insane";
                     int selectedFood = oneFoodRadioButton.isSelected() ? 1 :
                             threeFoodRadioButton.isSelected() ? 3 : 5;
-                    Color headColor = greenRadioButton.isSelected() ? new Color(0, 250, 0) :
+                    Color headColor = greenRadioButton.isSelected() ? new Color(204, 0, 102) :
                             blueRadioButton.isSelected() ? new Color(55, 91, 152) :
                             new Color(255, 255, 0);
-                    Color bodyColor = greenRadioButton.isSelected() ? new Color(0, 150, 0) :
+                    Color bodyColor = greenRadioButton.isSelected() ? new Color(76, 153, 0) :
                             blueRadioButton.isSelected() ? new Color(255, 187, 1) :
                             new Color(127, 0, 127);
                     startGame(selectedLevel, selectedFood, headColor, bodyColor);

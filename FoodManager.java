@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
 public class FoodManager {
-    public static void eatFood(Tile snakeHead, ArrayList<Tile> foodTiles, ArrayList<Tile> snakeBody) {
+    public static boolean eatFood(Tile snakeHead, ArrayList<Tile> foodTiles, ArrayList<Tile> snakeBody) {
+        boolean ateFood = false; // Variable to track if food was eaten
         for (int i = 0; i < foodTiles.size(); i++) {
             Tile foodTile = foodTiles.get(i);
             if (collision(snakeHead, foodTile)) {
@@ -29,6 +30,11 @@ public class FoodManager {
                             snakeBody.subList(1, snakeBody.size()).clear();
                         }
                     }
+                } else if (foodTile.isSpecialApple) {
+                    // Award 10 points for eating the special apple
+                    for (int j = 0; j < 10; j++) {
+                        snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y));
+                    }
                 } else {
                     // Regular apple, increase snake's length by 1
                     snakeBody.add(new Tile(foodTile.x, foodTile.y));
@@ -36,9 +42,11 @@ public class FoodManager {
 
                 // Remove the eaten food tile
                 foodTiles.remove(i);
+                ateFood = true; // Set ateFood to true since food was eaten
                 break;
             }
         }
+        return ateFood; // Return whether food was eaten or not
     }
 
     private static boolean collision(Tile tile1, Tile tile2) {

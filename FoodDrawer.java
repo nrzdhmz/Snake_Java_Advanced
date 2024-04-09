@@ -6,11 +6,17 @@ public class FoodDrawer {
         // Draw food (apple)
         int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
         for (Tile foodTile : foodTiles) {
-            g.setColor(Color.red); // Default color for regular apples
-            if (foodTile.isYellowApple) {
-                g.setColor(Color.yellow); // Yellow apple
-            } else if (foodTile.isPurpleApple) {
-                g.setColor(new Color(128, 0, 128)); // Purple apple
+            if (foodTile.isSpecialApple) {
+                // Special apple
+                g.setColor(Color.white); // Set color to white for the body
+            } else {
+                // Regular apple, yellow apple, or purple apple
+                g.setColor(Color.red); // Default color for regular apples
+                if (foodTile.isYellowApple) {
+                    g.setColor(Color.yellow); // Yellow apple
+                } else if (foodTile.isPurpleApple) {
+                    g.setColor(new Color(128, 0, 128)); // Purple apple
+                }
             }
 
             int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally

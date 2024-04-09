@@ -215,33 +215,17 @@ public void placeFood(int selectedFood) {
 
             // Food position is valid, add the food tile to the list
             Tile foodTile = new Tile(foodX, foodY);
+
             // Check if the snake's body has at least one segment
             if (snakeBody.size() >= 1) {
-                int randomNum = random.nextInt(20); // Random number between 0 and 29
-                if (randomNum == 0) {
-                    // 1 in 30 chance for a purple apple
-                    foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
+                int randomNum = random.nextInt(20); // Random number between 0 and 19
+                if (randomNum < 5) {
+                    // 1 in 20 chance for a special apple
+                    // Add properties for the special apple as needed
+                    foodTile.isSpecialApple = true; // Mark the food tile as a special apple
                     foodTile.creationTime = currentTime; // Record creation time
-
-                    // Set up a timer to toggle the color of the purple apple between red and purple
-                    Timer purpleAppleTimer = new Timer(500, new ActionListener() {
-                        boolean isRed = true;
-
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (isRed) {
-                                foodTile.isPurpleApple = false; // Change color to red
-                            } else {
-                                foodTile.isPurpleApple = true; // Change color to purple
-                            }
-                            isRed = !isRed; // Toggle color
-                        }
-                    });
-                    purpleAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
-                    purpleAppleTimer.setRepeats(true); // Repeat the toggle
-                    purpleAppleTimer.start(); // Start the timer
-                } else if (randomNum < 2) {
-                    // 1 in 20 chance for a yellow apple (excluding the 1 in 30 for purple apple)
+                } else if (randomNum < 7) {
+                    // 1 in 20 chance for a yellow apple (excluding the 1 in 20 for special apple)
                     foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
                     foodTile.creationTime = currentTime; // Record creation time
 
@@ -262,10 +246,32 @@ public void placeFood(int selectedFood) {
                     yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
                     yellowAppleTimer.setRepeats(true); // Repeat the toggle
                     yellowAppleTimer.start(); // Start the timer
+                } else if (randomNum < 9) {
+                    // 1 in 20 chance for a purple apple (excluding the 1 in 20 for special and yellow apples)
+                    foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
+                    foodTile.creationTime = currentTime; // Record creation time
+
+                    // Set up a timer to toggle the color of the purple apple between red and purple
+                    Timer purpleAppleTimer = new Timer(500, new ActionListener() {
+                        boolean isRed = true;
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (isRed) {
+                                foodTile.isPurpleApple = false; // Change color to red
+                            } else {
+                                foodTile.isPurpleApple = true; // Change color to purple
+                            }
+                            isRed = !isRed; // Toggle color
+                        }
+                    });
+                    purpleAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
+                    purpleAppleTimer.setRepeats(true); // Repeat the toggle
+                    purpleAppleTimer.start(); // Start the timer
                 }
             }
 
-            // Regular apple will be generated if neither purple nor yellow
+            // Regular apple will be generated if neither special, purple, nor yellow
             foodTiles.add(foodTile);
             break;
         } while (true);
