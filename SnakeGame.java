@@ -219,12 +219,12 @@ public void placeFood(int selectedFood) {
             // Check if the snake's body has at least one segment
             if (snakeBody.size() >= 1) {
                 int randomNum = random.nextInt(20); // Random number between 0 and 19
-                if (randomNum < 5) {
+                if (randomNum == 0) {
                     // 1 in 20 chance for a special apple
                     // Add properties for the special apple as needed
                     foodTile.isSpecialApple = true; // Mark the food tile as a special apple
                     foodTile.creationTime = currentTime; // Record creation time
-                } else if (randomNum < 7) {
+                } else if (randomNum < 4) {
                     // 1 in 20 chance for a yellow apple (excluding the 1 in 20 for special apple)
                     foodTile.isYellowApple = true; // Mark the food tile as a fully yellow apple
                     foodTile.creationTime = currentTime; // Record creation time
@@ -246,7 +246,7 @@ public void placeFood(int selectedFood) {
                     yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
                     yellowAppleTimer.setRepeats(true); // Repeat the toggle
                     yellowAppleTimer.start(); // Start the timer
-                } else if (randomNum < 11) {
+                } else if (randomNum < 6) {
                     // 1 in 20 chance for a purple apple (excluding the 1 in 20 for special and yellow apples)
                     foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
                     foodTile.creationTime = currentTime; // Record creation time
