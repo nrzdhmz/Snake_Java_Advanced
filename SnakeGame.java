@@ -351,6 +351,49 @@ public void move() {
 }
 
 
+public void moveSpecialApple() {
+    // Iterate through each special apple in the foodTiles list
+    for (Tile foodTile : foodTiles) {
+        if (foodTile.isSpecialApple) {
+            // Calculate the direction for the special apple to move away from the snake's head
+            int dx = foodTile.x - snakeHead.x;
+            int dy = foodTile.y - snakeHead.y;
+
+            // Determine the new position for the special apple
+            int newX = foodTile.x;
+            int newY = foodTile.y;
+
+            // Choose the direction in which the special apple should move (away from the snake's head)
+            if (Math.abs(dx) > Math.abs(dy)) {
+                newX += (dx > 0) ? 1 : -1; // Move horizontally away from the snake's head
+            } else {
+                newY += (dy > 0) ? 1 : -1; // Move vertically away from the snake's head
+            }
+
+            // Check if the new position is valid
+            if (isValidPosition(newX, newY)) {
+                foodTile.x = newX;
+                foodTile.y = newY;
+            }
+        }
+    }
+}
+
+
+// Method to check if a position is valid (not colliding with snake body or hitting game boundaries)
+private boolean isValidPosition(int x, int y) {
+    if (x < 0 || x >= boardWidth / tileSize || y < 0 || y >= boardHeight / tileSize) {
+        return false; // Out of bounds
+    }
+    for (Tile snakePart : snakeBody) {
+        if (snakePart.x == x && snakePart.y == y) {
+            return false; // Colliding with snake body
+        }
+    }
+    return true;
+}
+
+
 
     // Method to check collision between two tiles
     public boolean collision(Tile tile1, Tile tile2) {
@@ -360,6 +403,7 @@ public void move() {
     @Override
     public void actionPerformed(ActionEvent e) {
         move();
+        moveSpecialApple();
         repaint();
         if (gameOver) {
             playGameOverSound(); // Call playGameOverSound() when the game is over
