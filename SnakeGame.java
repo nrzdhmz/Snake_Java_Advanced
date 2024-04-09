@@ -246,7 +246,7 @@ public void placeFood(int selectedFood) {
                     yellowAppleTimer.setInitialDelay(3000); // Start toggling after 3 seconds
                     yellowAppleTimer.setRepeats(true); // Repeat the toggle
                     yellowAppleTimer.start(); // Start the timer
-                } else if (randomNum < 9) {
+                } else if (randomNum < 11) {
                     // 1 in 20 chance for a purple apple (excluding the 1 in 20 for special and yellow apples)
                     foodTile.isPurpleApple = true; // Mark the food tile as a purple apple
                     foodTile.creationTime = currentTime; // Record creation time
@@ -381,7 +381,7 @@ public void moveSpecialApple() {
 }
 
 
-// Method to check if a position is valid (not colliding with snake body, hitting game boundaries, or containing an apple)
+// Method to check if a position is valid (not colliding with snake body, hitting game boundaries, containing an apple, or hitting obstacles)
 private boolean isValidPosition(int x, int y) {
     // Check if the position is within the game boundaries
     if (x < 0 || x >= boardWidth / tileSize || y < 0 || y >= boardHeight / tileSize) {
@@ -402,8 +402,15 @@ private boolean isValidPosition(int x, int y) {
         }
     }
     
+    // Check if the position hits an obstacle
+    if (obstacleGrid[x][y]) {
+        return false; // Hitting an obstacle
+    }
+    
     return true; // The position is valid
 }
+
+
 
 
     // Method to check collision between two tiles

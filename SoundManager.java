@@ -14,7 +14,7 @@ public class SoundManager {
         try {
             // Load eat food sound
             eatFoodClip = AudioSystem.getClip();
-            AudioInputStream eatFoodInputStream = AudioSystem.getAudioInputStream(new File("05Newfood.wav"));
+            AudioInputStream eatFoodInputStream = AudioSystem.getAudioInputStream(new File("eat.wav"));
             eatFoodClip.open(eatFoodInputStream);
 
             // Load game over sound
