@@ -236,7 +236,7 @@ public void placeFood(int selectedFood) {
             // Check if the snake's body has at least one segment
             if (snakeBody.size() >= 1) {
                 int randomNum = random.nextInt(20); // Random number between 0 and 19
-                if (randomNum == 0) {
+                if (randomNum < 0.5) {
                     // 1 in 20 chance for a special apple
                     // Add properties for the special apple as needed
                     foodTile.isSpecialApple = true; // Mark the food tile as a special apple
