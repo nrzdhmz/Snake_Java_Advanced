@@ -149,8 +149,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     public void draw(Graphics g) {
         // Define RGB colors for white and black squares
-        Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("dirt.png");
-        Image blackSquareImg = Toolkit.getDefaultToolkit().getImage("dirt.png");
+        Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("plankDark.png");
+        Image blackSquareImg = Toolkit.getDefaultToolkit().getImage("plankGray.png");
     
     // Draw chessboard-like background with images
     for (int row = 0; row < boardHeight / tileSize; row++) {
@@ -373,61 +373,69 @@ public void move() {
     }
 }
 
-
+private int moveSpecialAppleCounter = 0;
 
 public void moveSpecialApple() {
-    // Iterate through each special apple in the foodTiles list
-    for (Tile specialApple : foodTiles) {
-        if (specialApple.isSpecialApple) {
-            // Calculate the direction for the special apple to move away from the snake's head
-            int dx = specialApple.x - snakeHead.x;
-            int dy = specialApple.y - snakeHead.y;
+    moveSpecialAppleCounter++; // Increment the movement counter
 
-            // Determine the new position for the special apple
-            int newX = specialApple.x;
-            int newY = specialApple.y;
+    // Check if the counter reaches the desired frequency relative to the snake's speed
+    if (moveSpecialAppleCounter >= (4 / 3)) { // Adjust this value as needed
+        // Reset the counter
+        moveSpecialAppleCounter = 0;
 
-            // If not stuck, prioritize moving towards an open direction
-            if (dx != 0) {
-                int newDx = (dx > 0) ? 1 : -1;
-                if (isValidPosition(newX + newDx, newY)) {
-                    newX += newDx;
+        // Iterate through each special apple in the foodTiles list
+        for (Tile specialApple : foodTiles) {
+            if (specialApple.isSpecialApple) {
+                // Calculate the direction for the special apple to move away from the snake's head
+                int dx = specialApple.x - snakeHead.x;
+                int dy = specialApple.y - snakeHead.y;
+
+                // Determine the new position for the special apple
+                int newX = specialApple.x;
+                int newY = specialApple.y;
+
+                // If not stuck, prioritize moving towards an open direction
+                if (dx != 0) {
+                    int newDx = (dx > 0) ? 1 : -1;
+                    if (isValidPosition(newX + newDx, newY)) {
+                        newX += newDx;
+                    }
                 }
+
+                if (dy != 0) {
+                    int newDy = (dy > 0) ? 1 : -1;
+                    if (isValidPosition(newX, newY + newDy)) {
+                        newY += newDy;
+                    }
+                }
+
+                // If both directions are blocked, randomly choose a valid direction to move
+                if (newX == specialApple.x && newY == specialApple.y) {
+                    ArrayList<Point> validDirections = new ArrayList<>();
+                    if (isValidPosition(newX + 1, newY)) {
+                        validDirections.add(new Point(1, 0));
+                    }
+                    if (isValidPosition(newX - 1, newY)) {
+                        validDirections.add(new Point(-1, 0));
+                    }
+                    if (isValidPosition(newX, newY + 1)) {
+                        validDirections.add(new Point(0, 1));
+                    }
+                    if (isValidPosition(newX, newY - 1)) {
+                        validDirections.add(new Point(0, -1));
+                    }
+                    
+                    if (!validDirections.isEmpty()) {
+                        Point randomDirection = validDirections.get(random.nextInt(validDirections.size()));
+                        newX += randomDirection.x;
+                        newY += randomDirection.y;
+                    }
+                }
+
+                // Update the position of the special apple
+                specialApple.x = newX;
+                specialApple.y = newY;
             }
-
-            if (dy != 0) {
-                int newDy = (dy > 0) ? 1 : -1;
-                if (isValidPosition(newX, newY + newDy)) {
-                    newY += newDy;
-                }
-            }
-
-            // If both directions are blocked, randomly choose a valid direction to move
-            if (newX == specialApple.x && newY == specialApple.y) {
-                ArrayList<Point> validDirections = new ArrayList<>();
-                if (isValidPosition(newX + 1, newY)) {
-                    validDirections.add(new Point(1, 0));
-                }
-                if (isValidPosition(newX - 1, newY)) {
-                    validDirections.add(new Point(-1, 0));
-                }
-                if (isValidPosition(newX, newY + 1)) {
-                    validDirections.add(new Point(0, 1));
-                }
-                if (isValidPosition(newX, newY - 1)) {
-                    validDirections.add(new Point(0, -1));
-                }
-                
-                if (!validDirections.isEmpty()) {
-                    Point randomDirection = validDirections.get(random.nextInt(validDirections.size()));
-                    newX += randomDirection.x;
-                    newY += randomDirection.y;
-                }
-            }
-
-            // Update the position of the special apple
-            specialApple.x = newX;
-            specialApple.y = newY;
         }
     }
 }

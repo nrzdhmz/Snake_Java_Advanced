@@ -31,7 +31,7 @@ public class FoodManager {
                         }
                     }
                 } else if (foodTile.isSpecialApple) {
-                    // Award 10 points for eating the special apple
+                    // Award 3 points for eating the special apple
                     for (int j = 0; j < 3; j++) {
                         snakeBody.add(new Tile(snakeBody.get(snakeBody.size() - 1).x, snakeBody.get(snakeBody.size() - 1).y));
                     }
