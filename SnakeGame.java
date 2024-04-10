@@ -149,20 +149,21 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     public void draw(Graphics g) {
         // Define RGB colors for white and black squares
-        Color whiteColor = new Color(23, 23, 23); // RGB for white color
-        Color blackColor = new Color(71, 61, 61); // RGB for black color
+        Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("plankGray.png");
+        Image blackSquareImg = Toolkit.getDefaultToolkit().getImage("plankDark.png");
     
-        // Draw chessboard-like background
-        for (int row = 0; row < boardHeight / tileSize; row++) {
-            for (int col = 0; col < boardWidth / tileSize; col++) {
-                if ((row + col) % 2 == 0) {
-                    g.setColor(whiteColor); // Set color to white for even squares
-                } else {
-                    g.setColor(blackColor); // Set color to black for odd squares
-                }
-                g.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Fill rectangle
+    // Draw chessboard-like background with images
+    for (int row = 0; row < boardHeight / tileSize; row++) {
+        for (int col = 0; col < boardWidth / tileSize; col++) {
+            if ((row + col) % 2 == 0) {
+                // Draw white square
+                g.drawImage(whiteSquareImg, col * tileSize, row * tileSize, tileSize, tileSize, null);
+            } else {
+                // Draw black square
+                g.drawImage(blackSquareImg, col * tileSize, row * tileSize, tileSize, tileSize, null);
             }
         }
+    }
     
         // Draw grid lines
         for (int i = 0; i < boardWidth / tileSize; i++) {
