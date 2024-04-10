@@ -149,8 +149,8 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     public void draw(Graphics g) {
         // Define RGB colors for white and black squares
-        Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("plankGray.png");
-        Image blackSquareImg = Toolkit.getDefaultToolkit().getImage("plankDark.png");
+        Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("dirt.png");
+        Image blackSquareImg = Toolkit.getDefaultToolkit().getImage("dirt.png");
     
     // Draw chessboard-like background with images
     for (int row = 0; row < boardHeight / tileSize; row++) {
