@@ -5,7 +5,16 @@ public class FoodDrawer {
     public static void drawFoods(Graphics g, ArrayList<Tile> foodTiles, int tileSize) {
         // Draw food (apple)
         int appleSize = tileSize * 2 / 3; // Adjust the size of the apple
+        int outlineThickness = 2; // Thickness of the black outline
+
         for (Tile foodTile : foodTiles) {
+            int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
+            int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
+            
+            // Draw black outline for the apple
+            g.setColor(Color.black); // Set color to black for the outline
+            g.fillOval(appleX - outlineThickness, appleY - outlineThickness, appleSize + 2 * outlineThickness, appleSize + 2 * outlineThickness); // Draw the outline
+            
             if (foodTile.isSpecialApple) {
                 // Special apple
                 g.setColor(Color.white); // Set color to white for the body
@@ -19,10 +28,8 @@ public class FoodDrawer {
                 }
             }
 
-            int appleX = foodTile.x * tileSize + (tileSize - appleSize) / 2; // Center the apple horizontally
-            int appleY = foodTile.y * tileSize + (tileSize - appleSize) / 2; // Center the apple vertically
-            g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the rounded apple
-            
+            g.fillOval(appleX, appleY, appleSize, appleSize); // Draw the filled apple
+
             // Draw the '?' sign inside the purple apple
             if (foodTile.isPurpleApple) {
                 g.setColor(Color.white); // Color for the question mark
