@@ -1,15 +1,28 @@
 import java.io.*;
 
+/**
+ * Represents a medium level in the SnakeGame.
+ */
 public class MediumLevel extends SnakeGame {
 
+    /**
+     * Constructor for MediumLevel.
+     *
+     * @param boardWidth    The width of the game board.
+     * @param boardHeight   The height of the game board.
+     * @param selectedFood  The number of food items to place on the board.
+     */
     MediumLevel(int boardWidth, int boardHeight, int selectedFood) {
-        super(boardWidth, boardHeight, selectedFood); 
+        super(boardWidth, boardHeight, selectedFood);
 
         loadBestScore();
         addObstacles();
-        placeFood(selectedFood); 
+        placeFood(selectedFood);
     }
 
+    /**
+     * Loads the best score from the file.
+     */
     private void loadBestScore() {
         try {
             File file = new File("medium_level_best_score.txt");
@@ -26,8 +39,11 @@ public class MediumLevel extends SnakeGame {
         }
     }
 
+    /**
+     * Updates the best score in the file.
+     */
     @Override
-    public void updateBestScore() { 
+    public void updateBestScore() {
         super.updateBestScore();
         try {
             File file = new File("medium_level_best_score.txt");
@@ -39,6 +55,9 @@ public class MediumLevel extends SnakeGame {
         }
     }
 
+    /**
+     * Adds obstacles to the game board.
+     */
     private void addObstacles() {
         obstacleGrid[0][0] = true;
         obstacleGrid[1][0] = true;

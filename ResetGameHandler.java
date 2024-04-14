@@ -1,5 +1,13 @@
+/**
+ * Utility class for handling game reset functionality.
+ */
 public class ResetGameHandler {
-  // Method to reset the game
+
+  /**
+   * Resets the game to its initial state.
+   *
+   * @param snakeGame The SnakeGame instance to reset.
+   */
   public static void resetGame(SnakeGame snakeGame) {
       snakeGame.snakeHead = new Tile(0, 6); // Reset snake head position
       snakeGame.snakeBody.clear(); // Clear snake body

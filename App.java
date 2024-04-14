@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * The main class for the Snake game application.
+ */
 public class App extends JFrame implements ActionListener {
     // Components for level selection, food amount selection, snake color selection, and start button
     JRadioButton easyRadioButton, mediumRadioButton, hardRadioButton, insaneRadioButton;
@@ -14,7 +17,9 @@ public class App extends JFrame implements ActionListener {
     JButton startButton;
     JLabel gameplayTimeLabel; // Label to display gameplay time
 
-    // Constructor to initialize the application
+    /**
+     * Constructor to initialize the application.
+     */
     public App() {
         setTitle("Snake Game"); // Set the title of the frame
         setSize(600, 600); // Set the size of the frame
@@ -128,7 +133,14 @@ public class App extends JFrame implements ActionListener {
         setVisible(true); // Make the frame visible
     }
 
-    // Method to start the game based on selected options
+    /**
+     * Method to start the game based on selected options.
+     *
+     * @param selectedLevel The selected level of difficulty.
+     * @param selectedFood The selected amount of food.
+     * @param headColor The color of the snake's head.
+     * @param bodyColor The color of the snake's body.
+     */
     private void startGame(String selectedLevel, int selectedFood, Color headColor, Color bodyColor) {
         SnakeGame snakeGame;
         // Create the appropriate level of the snake game based on selected level
@@ -158,7 +170,9 @@ public class App extends JFrame implements ActionListener {
         launchSnakeGame(snakeGame, selectedFood);
     }
 
-    // Method to update gameplay time label with content from the file
+    /**
+     * Method to update gameplay time label with content from the file.
+     */
     private void updateGameplayTime() {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("gameplay_time.txt"));
@@ -175,7 +189,12 @@ public class App extends JFrame implements ActionListener {
         }
     }
 
-    // Method to launch the snake game in a new frame
+    /**
+     * Method to launch the snake game in a new frame.
+     *
+     * @param game The SnakeGame instance to launch.
+     * @param selectedFood The selected amount of food.
+     */
     private void launchSnakeGame(SnakeGame game, int selectedFood) {
         game.placeFood(selectedFood); // Place food on the game board
         JFrame frame = new JFrame("Snake Game");
@@ -189,7 +208,11 @@ public class App extends JFrame implements ActionListener {
         this.dispose(); // Close the current frame
     }
 
-    // Action performed method to handle button click events
+    /**
+     * Action performed method to handle button click events.
+     *
+     * @param e The ActionEvent object representing the event.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (easyRadioButton.isSelected() || mediumRadioButton.isSelected() || hardRadioButton.isSelected() || insaneRadioButton.isSelected()) {
@@ -218,7 +241,11 @@ public class App extends JFrame implements ActionListener {
         }
     }
 
-    // Main method to start the application
+    /**
+     * Main method to start the application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         new App(); // Create an instance of the application
     }

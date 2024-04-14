@@ -1,6 +1,17 @@
 import java.util.ArrayList;
 
+/**
+ * Utility class for managing food items in the game.
+ */
 public class FoodManager {
+    /**
+     * Checks if the snake's head has collided with any food item, and handles food consumption accordingly.
+     *
+     * @param snakeHead   The tile representing the snake's head.
+     * @param foodTiles   The list of food tiles on the game board.
+     * @param snakeBody   The list of tiles representing the snake's body.
+     * @return True if the snake has eaten any food, false otherwise.
+     */
     public static boolean eatFood(Tile snakeHead, ArrayList<Tile> foodTiles, ArrayList<Tile> snakeBody) {
         boolean ateFood = false; // Variable to track if food was eaten
         for (int i = 0; i < foodTiles.size(); i++) {
@@ -49,6 +60,13 @@ public class FoodManager {
         return ateFood; // Return whether food was eaten or not
     }
 
+    /**
+     * Checks if two tiles have collided.
+     *
+     * @param tile1 The first tile.
+     * @param tile2 The second tile.
+     * @return True if the tiles have collided, false otherwise.
+     */
     private static boolean collision(Tile tile1, Tile tile2) {
         return tile1.x == tile2.x && tile1.y == tile2.y;
     }

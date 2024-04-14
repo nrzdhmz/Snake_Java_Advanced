@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
 import javax.sound.sampled.*;
-import java.awt.Color;
 
-// SnakeGame class
+/**
+ * SnakeGame class represents the game logic and user interface for the Snake game.
+ */
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     // Instance variables to store start and end times
     private LocalDateTime startTime;
@@ -54,7 +55,12 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
     public Color headColor; // Color of the snake's head
     public Color bodyColor; // Color of the snake's body
 
-    // SnakeGame constructor
+    /**
+     * Constructor for the SnakeGame class.
+     * @param boardWidth The width of the game board.
+     * @param boardHeight The height of the game board.
+     * @param selectedFood Number of food items to be placed on the screen.
+     */
     SnakeGame(int boardWidth, int boardHeight, int selectedFood) {
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
@@ -113,7 +119,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         bodyColor = new Color(0, 150, 0); // Default body color
     }
 
-    // Method to return to the home page
+    /**
+     * Method to return to the home page.
+     */
     private void returnToHomePage() {
         JFrame currentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         currentFrame.dispose();
@@ -147,6 +155,10 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         TimeUtility.saveGameplayTime(duration);
     }
 
+    /**
+     * Draw method to draw components on the panel.
+     * @param g Graphics object to draw on.
+     */
     public void draw(Graphics g) {
         // Define RGB colors for white and black squares
         Image whiteSquareImg = Toolkit.getDefaultToolkit().getImage("plankDark.png");

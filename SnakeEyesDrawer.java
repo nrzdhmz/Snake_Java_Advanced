@@ -1,6 +1,20 @@
 import java.awt.*;
 
+/**
+ * Utility class for drawing eyes on the snake's head.
+ */
 public class SnakeEyesDrawer {
+
+    /**
+     * Draws eyes on the snake's head based on its direction of movement.
+     *
+     * @param g          The Graphics object to draw on.
+     * @param tileSize   The size of each tile on the game board.
+     * @param snakeHeadX The x-coordinate of the snake's head.
+     * @param snakeHeadY The y-coordinate of the snake's head.
+     * @param velocityX  The horizontal velocity of the snake.
+     * @param velocityY  The vertical velocity of the snake.
+     */
     public static void drawEyes(Graphics g, int tileSize, int snakeHeadX, int snakeHeadY, int velocityX, int velocityY) {
         g.setColor(Color.black);
         int eyeSize = tileSize / 5; // Size of the eyes

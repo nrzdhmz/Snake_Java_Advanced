@@ -1,7 +1,18 @@
 import java.awt.*;
 
+/**
+ * Utility class for rendering game graphics.
+ */
 public class GameRenderer {
 
+    /**
+     * Draws the game over message if the game is paused.
+     *
+     * @param g           The Graphics object for drawing.
+     * @param boardWidth  The width of the game board.
+     * @param boardHeight The height of the game board.
+     * @param gamePaused  A boolean indicating whether the game is paused.
+     */
     public static void drawGameOverMessage(Graphics g, int boardWidth, int boardHeight, boolean gamePaused) {
         if (gamePaused) {
             g.setFont(new Font("Arial", Font.BOLD, 40));
@@ -17,6 +28,17 @@ public class GameRenderer {
         }
     }
 
+    /**
+     * Draws the score panel.
+     *
+     * @param g            The Graphics object for drawing.
+     * @param boardWidth   The width of the game board.
+     * @param boardHeight  The height of the game board.
+     * @param tileSize     The size of each tile on the game board.
+     * @param snakeBodySize The current size of the snake's body.
+     * @param bestScore    The best score achieved.
+     * @param gameOver     A boolean indicating whether the game is over.
+     */
     public static void drawScore(Graphics g, int boardWidth, int boardHeight, int tileSize, int snakeBodySize, int bestScore, boolean gameOver) {
         g.setFont(new Font("Arial", Font.PLAIN, 16));
         if (gameOver) {
